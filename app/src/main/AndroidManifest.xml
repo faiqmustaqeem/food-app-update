@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.codiansoft.foodapp">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <uses-library android:name="com.google.android.maps" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider327703697667608"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".FacebookLogInActivity" />
+        <activity android:name=".LogInActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".RestaurantActivity" />
+        <activity android:name=".FoodActivity" />
+        <activity android:name=".DeliveryRestaurantsActivity" />
+        <activity android:name=".QuickServiceRestaurantsActivity" />
+        <activity android:name=".TakeawayRestaurantsActivity" />
+        <activity android:name=".BasketActivity" />
+        <activity android:name=".AccountActivity" />
+        <activity android:name=".AboutActivity" />
+        <activity android:name=".HelpActivity" />
+        <activity android:name=".RestaurantReservationActivity" />
+        <activity android:name=".CheckoutActivity" />
+        <activity android:name=".FriendsActivitiesDetailsActivity"></activity>
+    </application>
+
+</manifest>

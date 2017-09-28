@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.codiansoft.foodapp.MainActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/clSlideDialog"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:background="@android:color/white"
+        android:visibility="invisible"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTopBar">
+
+    </android.support.constraint.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:drawable/editbox_background_normal"
+        android:hint="Search here..."
+        android:padding="8dp"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/llTopBar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/llTopBar" />
+
+    <TextView
+        android:id="@+id/tvHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Restaurants"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/llTopBar"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintLeft_toLeftOf="@+id/llTopBar"
+        app:layout_constraintRight_toRightOf="@+id/llTopBar"
+        app:layout_constraintTop_toTopOf="@+id/llTopBar" />
+
+    <LinearLayout
+        android:id="@+id/llServices"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="4dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/cardView2"
+        app:layout_constraintHorizontal_bias="0.29"
+        app:layout_constraintLeft_toLeftOf="@+id/cardView2"
+        app:layout_constraintRight_toRightOf="@+id/cardView2"
+        app:layout_constraintTop_toTopOf="@+id/llTopBar"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <TextView
+            android:id="@+id/tvServiceDelivery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_delivery"
+            android:drawablePadding="8dp"
+            android:padding="8dp"
+            android:text="Delivery"
+            android:textColor="@color/colorPrimary"
+            android:background="?attr/selectableItemBackground"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/tvServiceQuick"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_quick_service"
+            android:drawablePadding="8dp"
+            android:padding="8dp"
+            android:text="Quick Service"
+            android:textColor="@color/colorPrimary"
+            android:background="?attr/selectableItemBackground" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/tvServiceTakeaway"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_takeaway"
+            android:drawablePadding="8dp"
+            android:padding="8dp"
+            android:text="Takeaway"
+            android:textColor="@color/colorPrimary"
+            android:background="?attr/selectableItemBackground" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/tvServiceReservation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_reservation"
+            android:drawablePadding="8dp"
+            android:padding="8dp"
+            android:text="Reservation"
+            android:textColor="@color/colorPrimary"
+            android:background="?attr/selectableItemBackground" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTopBar"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/button_gradient_bg"
+        android:orientation="horizontal"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivOptions"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:padding="4dp"
+            android:src="@drawable/ic_options" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:hint="Search Restaurants"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/ivSearch"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:padding="8dp"
+            android:src="@drawable/ic_search"
+            android:tint="@android:color/white"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:weightSum="5">
+
+            <ImageView
+                android:id="@+id/ivHome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_home" />
+
+            <ImageView
+                android:id="@+id/ivMeals"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_meals" />
+
+            <ImageView
+                android:id="@+id/ivFriendsActivities"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_friends_activity" />
+
+            <ImageView
+                android:id="@+id/ivOrders"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_menu" />
+
+            <ImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_profile" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTopBar"
+        app:layout_constraintVertical_bias="0.0"></FrameLayout>
+
+</android.support.constraint.ConstraintLayout>

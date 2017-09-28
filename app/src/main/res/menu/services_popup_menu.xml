@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/service_delivery"
+        android:title="Delivery" />
+
+    <item
+        android:id="@+id/service_quick_service"
+        android:title="Quick Service" />
+
+    <item
+        android:id="@+id/service_takeaway"
+        android:title="Takeaway" />
+    <item
+        android:id="@+id/service_reservation"
+        android:title="Reservation" />
+
+</menu>
