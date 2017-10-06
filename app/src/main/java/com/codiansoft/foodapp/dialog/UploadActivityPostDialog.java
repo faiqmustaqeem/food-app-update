@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.codiansoft.foodapp.R;
 
+import static com.codiansoft.foodapp.fragment.FriendsFragment.newPostBitmap;
+
 /**
  * Created by Codiansoft on 9/27/2017.
  */
@@ -43,7 +45,7 @@ public class UploadActivityPostDialog extends Dialog implements android.view.Vie
 
         Window window = getWindow();
         window.setGravity(Gravity.CENTER);
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         initUI();
     }
 
@@ -53,7 +55,7 @@ public class UploadActivityPostDialog extends Dialog implements android.view.Vie
         tvCancel.setOnClickListener(this);
         tvSubmit = (TextView) findViewById(R.id.tvSubmit);
         tvSubmit.setOnClickListener(this);
-        ivPostImage.setImageBitmap(postImage);
+        ivPostImage.setImageBitmap(newPostBitmap);
     }
 
     @Override

@@ -18,7 +18,7 @@ import java.util.TimerTask;
 import me.relex.circleindicator.CircleIndicator;
 
 public class FriendsActivitiesDetailsActivity extends AppCompatActivity {
-    String friendUserID;
+    String userID;
     private static ViewPager mPager;
     private static int currentPage = 0;
     ArrayList<FriendsActivitiesDetailsModel> friendsActivityArrayList = new ArrayList<>();
@@ -33,7 +33,7 @@ public class FriendsActivitiesDetailsActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_friends_activities_details);
-        friendUserID = getIntent().getExtras().getString("friendUserID");
+        userID = getIntent().getExtras().getString("UserID");
 
         pausePagerImagesSlide = false;
 
@@ -56,7 +56,7 @@ public class FriendsActivitiesDetailsActivity extends AppCompatActivity {
         swipeTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!pausePagerImagesSlide){
+                if (!pausePagerImagesSlide) {
                     handler.post(Update);
                 }
             }

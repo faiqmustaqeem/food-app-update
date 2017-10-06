@@ -128,6 +128,26 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
             }
         });
 
+
+
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                viewPager.getParent().requestDisallowInterceptTouchEvent(true);
+            }
+        });
+
+
+
+
         getFragOneItems();
         getFragTwoItems();
 

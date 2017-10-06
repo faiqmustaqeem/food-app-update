@@ -1,5 +1,7 @@
 package com.codiansoft.foodapp;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,9 +9,12 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -28,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codiansoft.foodapp.dialog.UploadActivityPostDialog;
 import com.codiansoft.foodapp.fragment.FriendsFragment;
 import com.codiansoft.foodapp.fragment.HomeFragment;
 import com.codiansoft.foodapp.fragment.MyOrdersFragment;
@@ -53,10 +59,14 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import static com.codiansoft.foodapp.fragment.FriendsFragment.CAMERA_PERMISSION_REQUEST_CODE;
+import static com.codiansoft.foodapp.fragment.FriendsFragment.newPostBitmap;
+import static com.codiansoft.foodapp.fragment.FriendsFragment.newPostImageUri;
 import static com.codiansoft.foodapp.fragment.SearchFragment.gvSearchCategories;
 import static com.codiansoft.foodapp.fragment.SearchFragment.rvSearchedRestaurants;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+    private static final int PERMISSIONS_CODE = 1;
     ImageView ivOptions, ivHome, ivMeals, ivSearch, ivFriendsActivities, ivProfile, ivOrders;
     TextView tvHeader;
     ConstraintLayout clSlideDialog;
@@ -84,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         initUI();
+
+        requestPermissions();
 
         //for location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -158,6 +170,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
+    }
+
+    private void requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            String[] permissions = new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_CONTACTS,
+                    android.Manifest.permission.WRITE_CONTACTS,
+                    Manifest.permission.CAMERA,
+            };
+            ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSIONS_CODE);
+
+        }
     }
 
     // for location on/off check
@@ -257,6 +286,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ivOptions.setOnClickListener(this);
         ivFriendsActivities.setOnClickListener(this);
         ivOrders.setOnClickListener(this);
+
+        ivHome.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
     }
 
     @Override
@@ -276,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ivFriendsActivities.setColorFilter(null);
                 ivProfile.setColorFilter(null);
                 ivOrders.setColorFilter(null);
-                ivFriendsActivities.setColorFilter(null);
+
 
                 Fragment homeFragment = fm.findFragmentByTag(HomeFragment.TAG);
 
@@ -352,60 +383,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.ivFriendsActivities:
-                if (isLoggedInWithFB()) {
-                    ivMeals.setImageResource(R.drawable.ic_meals);
+                ivMeals.setImageResource(R.drawable.ic_meals);
 
-                    ivFriendsActivities.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
-                    ivHome.setColorFilter(null);
-                    ivMeals.setColorFilter(null);
-                    ivFriendsActivities.setColorFilter(null);
-                    ivProfile.setColorFilter(null);
-                    ivOrders.setColorFilter(null);
+                ivFriendsActivities.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
+                ivHome.setColorFilter(null);
+                ivMeals.setColorFilter(null);
+                ivProfile.setColorFilter(null);
+                ivOrders.setColorFilter(null);
 
-                    Fragment friendsFragment = fm.findFragmentByTag(FriendsFragment.TAG);
+                Fragment friendsFragment = fm.findFragmentByTag(FriendsFragment.TAG);
 
-                    friendsFragment = new FriendsFragment();
-                    fm.beginTransaction()
-                            .replace(R.id.container, friendsFragment, FriendsFragment.TAG)
+                friendsFragment = new FriendsFragment();
+                fm.beginTransaction()
+                        .replace(R.id.container, friendsFragment, FriendsFragment.TAG)
 //                        .addToBackStack(null)  // uncomment this line if you want to be able to return to the prev. fragment with "back" button
-                            .commit();
-                    tvHeader.setText("Friends Activities");
-
-                } else if (isLoggedIn()) {
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("Please log in with Facebook")
-                            .setMessage("You must log in with Facebook to see friends' activities\nDo you want to sign out and log in with Facebook?")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    SharedPreferences settings = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = settings.edit();
-                                    editor.putString("apiSecretKey", "");
-                                    editor.putString("userID", "");
-                                    editor.commit();
-
-                                    Intent logoutIntent = new Intent(MainActivity.this, LogInActivity.class);
-                                    dialog.dismiss();
-                                    ActivityCompat.finishAffinity(MainActivity.this);
-                                    logoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    MainActivity.this.startActivity(logoutIntent);
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Whatever...
-                                }
-                            }).show();
-                }
-
-
-
-
-
-
+                        .commit();
+                tvHeader.setText("Friends Activities");
 
 
                 break;
@@ -670,6 +663,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         switch (requestCode) {
 // Check for the integer request code originally supplied to startResolutionForResult().
             case REQUEST_CHECK_SETTINGS:
@@ -680,8 +675,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case Activity.RESULT_CANCELED:
                         locationSettingsRequest();//keep asking if imp or do whatever
                         break;
+                    /*case CAMERA_PERMISSION_REQUEST_CODE:
+                        try {
+                            newPostBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), newPostImageUri);
+                            newPostBitmap = Bitmap.createScaledBitmap(newPostBitmap, newPostBitmap.getWidth() / 3, newPostBitmap.getHeight() / 3, false);
+
+                            UploadActivityPostDialog d = new UploadActivityPostDialog(this, newPostBitmap);
+                            d.show();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;*/
                 }
                 break;
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSIONS_CODE) {
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                int grantResult = grantResults[i];
+
+                if (permission.equals(android.Manifest.permission.SEND_SMS)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(new String[]{Manifest.permission.SEND_SMS}, PERMISSIONS_CODE);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
