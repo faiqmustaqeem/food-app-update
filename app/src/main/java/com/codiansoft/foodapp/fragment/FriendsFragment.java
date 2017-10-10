@@ -305,7 +305,8 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
                 break;
             case R.id.fabNewPostGallery:
-
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, 1);
                 break;
             case R.id.tvUserName:
             case R.id.tvActivityTitle:
@@ -314,9 +315,9 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 SharedPreferences settings = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
                 String userID = settings.getString("userID", "defaultValue");
 
-                Intent i = new Intent(getActivity(), FriendsActivitiesDetailsActivity.class);
-                i.putExtra("UserID", userID);
-                startActivity(i);
+                Intent intent = new Intent(getActivity(), FriendsActivitiesDetailsActivity.class);
+                intent.putExtra("UserID", userID);
+                startActivity(intent);
                 break;
         }
     }
@@ -338,12 +339,24 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(getActivity(), "resul", Toast.LENGTH_SHORT).show();
-        if (requestCode == 2 & resultCode != Activity.RESULT_CANCELED) {
+//        Toast.makeText(getActivity(), "resul", Toast.LENGTH_SHORT).show();
+        if (requestCode == 1 & resultCode != Activity.RESULT_CANCELED) {
             try {
 //                newPostBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), newPostImageUri);
                 newPostBitmap = (Bitmap) data.getExtras().get("data");
-                newPostBitmap = Bitmap.createScaledBitmap(newPostBitmap, newPostBitmap.getWidth() / 3, newPostBitmap.getHeight() / 3, false);
+                newPostBitmap = Bitmap.createScaledBitmap(newPostBitmap, newPostBitmap.getWidth() / 1, newPostBitmap.getHeight() / 1, false);
+
+                UploadActivityPostDialog d = new UploadActivityPostDialog(getActivity(), newPostBitmap);
+                d.show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (requestCode == 2 & resultCode != Activity.RESULT_CANCELED) {
+            try {
+//                newPostBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), newPostImageUri);
+                newPostBitmap = (Bitmap) data.getExtras().get("data");
+                newPostBitmap = Bitmap.createScaledBitmap(newPostBitmap, newPostBitmap.getWidth() / 1, newPostBitmap.getHeight() / 1, false);
 
                 UploadActivityPostDialog d = new UploadActivityPostDialog(getActivity(), newPostBitmap);
                 d.show();

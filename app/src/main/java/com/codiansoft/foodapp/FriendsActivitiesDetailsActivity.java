@@ -46,7 +46,8 @@ public class FriendsActivitiesDetailsActivity extends AppCompatActivity {
         final Runnable Update = new Runnable() {
             public void run() {
                 if (currentPage == friendsActivityArrayList.size()) {
-                    currentPage = 0;
+//                    currentPage = 0;
+                    finish();
                 }
                 mPager.setCurrentItem(currentPage++, true);
             }

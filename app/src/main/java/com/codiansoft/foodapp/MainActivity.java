@@ -1,27 +1,22 @@
 package com.codiansoft.foodapp;
 
-import android.*;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -30,10 +25,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codiansoft.foodapp.dialog.UploadActivityPostDialog;
 import com.codiansoft.foodapp.fragment.FriendsFragment;
 import com.codiansoft.foodapp.fragment.HomeFragment;
 import com.codiansoft.foodapp.fragment.MyOrdersFragment;
@@ -41,7 +36,6 @@ import com.codiansoft.foodapp.fragment.SearchFragment;
 import com.codiansoft.foodapp.fragment.ServiceRestaurantsFragment;
 import com.codiansoft.foodapp.fragment.UserSettingsFragment;
 import com.facebook.AccessToken;
-import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -59,20 +53,19 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import static com.codiansoft.foodapp.fragment.FriendsFragment.CAMERA_PERMISSION_REQUEST_CODE;
-import static com.codiansoft.foodapp.fragment.FriendsFragment.newPostBitmap;
-import static com.codiansoft.foodapp.fragment.FriendsFragment.newPostImageUri;
 import static com.codiansoft.foodapp.fragment.SearchFragment.gvSearchCategories;
 import static com.codiansoft.foodapp.fragment.SearchFragment.rvSearchedRestaurants;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final int PERMISSIONS_CODE = 1;
     ImageView ivOptions, ivHome, ivMeals, ivSearch, ivFriendsActivities, ivProfile, ivOrders;
-    TextView tvHeader;
-    ConstraintLayout clSlideDialog;
+    TextView tvHeader, tvSort, tvPrice, tvDietary, tvDoneSort, tvPriceRange;
+    ConstraintLayout clSlideDialog, clSortLayout, clPriceLayout, clDietaryLayout;
     LinearLayout llTopBar, llServices;
     Animation servicesSlideUp, servicesSlideDown, slideUp, slideDown;
     TextView tvServiceDelivery, tvServiceQuick, tvServiceTakeaway, tvServiceReservation;
+
+    SeekBar seekBar;
 
     // for location
     private LocationCallback mLocationCallback;
@@ -170,6 +163,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
+        //Price filter seekBar
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                tvPriceRange.setText("Up to " + String.valueOf(progress * 500));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
     }
 
     private void requestPermissions() {
@@ -248,6 +259,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initUI() {
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
+
+        tvPriceRange = (TextView) findViewById(R.id.tvPriceRange);
+
+        tvSort = (TextView) findViewById(R.id.tvSort);
+        tvPrice = (TextView) findViewById(R.id.tvPrice);
+        tvDietary = (TextView) findViewById(R.id.tvDietary);
+        tvDoneSort = (TextView) findViewById(R.id.tvDoneSort);
+        tvSort.setTextColor(Color.BLACK);
+        tvSort.setOnClickListener(this);
+        tvPrice.setOnClickListener(this);
+        tvDietary.setOnClickListener(this);
+        tvDoneSort.setOnClickListener(this);
+
+        clSortLayout = (ConstraintLayout) findViewById(R.id.clSortLayout);
+        clPriceLayout = (ConstraintLayout) findViewById(R.id.clPriceLayout);
+        clDietaryLayout = (ConstraintLayout) findViewById(R.id.clDietaryLayout);
+
         tvServiceDelivery = (TextView) findViewById(R.id.tvServiceDelivery);
         tvServiceQuick = (TextView) findViewById(R.id.tvServiceQuick);
         tvServiceTakeaway = (TextView) findViewById(R.id.tvServiceTakeaway);
@@ -267,8 +296,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clSlideDialog.bringToFront();
         llTopBar = (LinearLayout) findViewById(R.id.llTopBar);
         llTopBar.bringToFront();
+
+
         llServices = (LinearLayout) findViewById(R.id.llServices);
         llServices.bringToFront();
+
         ivOrders = (ImageView) findViewById(R.id.ivOrders);
         ivProfile = (ImageView) findViewById(R.id.ivProfile);
         ivHome = (ImageView) findViewById(R.id.ivHome);
@@ -294,12 +326,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
 
-        if (llServices.getVisibility() == View.VISIBLE)
-            llServices.startAnimation(servicesSlideDown);
-        if (clSlideDialog.getVisibility() == View.VISIBLE) clSlideDialog.startAnimation(slideUp);
-
         switch (view.getId()) {
             case R.id.ivHome:
+                hideServicesAndFilterSlideDialogs();
                 ivMeals.setImageResource(R.drawable.ic_meals);
 
                 ivHome.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
@@ -320,6 +349,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.ivMeals:
+                hideServicesAndFilterSlideDialogs();
 
                 /*SearchFragment mealsFragment = (SearchFragment) fm.findFragmentByTag(SearchFragment.TAG);
 
@@ -383,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.ivFriendsActivities:
+                hideServicesAndFilterSlideDialogs();
                 ivMeals.setImageResource(R.drawable.ic_meals);
 
                 ivFriendsActivities.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
@@ -403,6 +434,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.ivSearch:
+                hideServicesAndFilterSlideDialogs();
                 ivMeals.setImageResource(R.drawable.ic_meals);
 
                 ivHome.setColorFilter(null);
@@ -422,6 +454,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tvHeader.setText("Search Restaurants");
                 break;
             case R.id.ivOptions:
+                hideServicesAndFilterSlideDialogs();
                 /*MainOptionsDialog optionsDialog = new MainOptionsDialog(this);
                 optionsDialog.show();*/
 
@@ -450,6 +483,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.tvServiceDelivery:
+                hideServicesAndFilterSlideDialogs();
                 GlobalClass.restaurantServiceType = "delivery";
                 ivHome.setColorFilter(null);
                 ivMeals.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
@@ -472,6 +506,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.tvServiceQuick:
+                hideServicesAndFilterSlideDialogs();
                 GlobalClass.restaurantServiceType = "quick";
                 ivHome.setColorFilter(null);
                 ivMeals.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
@@ -494,6 +529,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.tvServiceTakeaway:
+                hideServicesAndFilterSlideDialogs();
                 GlobalClass.restaurantServiceType = "takeaway";
                 ivHome.setColorFilter(null);
                 ivMeals.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
@@ -516,6 +552,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.tvServiceReservation:
+                hideServicesAndFilterSlideDialogs();
                 GlobalClass.restaurantServiceType = "reservation";
                 ivHome.setColorFilter(null);
                 ivMeals.setColorFilter(ContextCompat.getColor(this, R.color.selected_icon_color));
@@ -538,6 +575,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.ivProfile:
+                hideServicesAndFilterSlideDialogs();
                 ivMeals.setImageResource(R.drawable.ic_meals);
 
                 ivHome.setColorFilter(null);
@@ -561,6 +599,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(accountIntent);*/
                 break;
             case R.id.ivOrders:
+                hideServicesAndFilterSlideDialogs();
                 ivMeals.setImageResource(R.drawable.ic_meals);
 
                 ivHome.setColorFilter(null);
@@ -577,7 +616,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 tvHeader.setText("Orders");
                 break;
+            case R.id.tvSort:
+                clPriceLayout.setVisibility(View.GONE);
+                clDietaryLayout.setVisibility(View.GONE);
+                clSortLayout.setVisibility(View.VISIBLE);
+                tvSort.setTextColor(Color.BLACK);
+                tvDietary.setTextColor(Color.GRAY);
+                tvPrice.setTextColor(Color.GRAY);
+                break;
+            case R.id.tvPrice:
+                clPriceLayout.setVisibility(View.VISIBLE);
+                clDietaryLayout.setVisibility(View.GONE);
+                clSortLayout.setVisibility(View.GONE);
+                tvPrice.setTextColor(Color.BLACK);
+                tvSort.setTextColor(Color.GRAY);
+                tvDietary.setTextColor(Color.GRAY);
+                break;
+            case R.id.tvDietary:
+                clDietaryLayout.setVisibility(View.VISIBLE);
+                clPriceLayout.setVisibility(View.GONE);
+                clSortLayout.setVisibility(View.GONE);
+                tvDietary.setTextColor(Color.BLACK);
+                tvPrice.setTextColor(Color.GRAY);
+                tvSort.setTextColor(Color.GRAY);
+                break;
+            case R.id.tvDoneSort:
+                hideServicesAndFilterSlideDialogs();
+                break;
         }
+    }
+
+    private void hideServicesAndFilterSlideDialogs() {
+        if (llServices.getVisibility() == View.VISIBLE)
+            llServices.startAnimation(servicesSlideDown);
+        if (clSlideDialog.getVisibility() == View.VISIBLE) clSlideDialog.startAnimation(slideUp);
     }
 
     private boolean isLoggedIn() {

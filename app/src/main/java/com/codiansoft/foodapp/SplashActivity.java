@@ -53,7 +53,7 @@ public class SplashActivity extends AwesomeSplash {
         configSplash.setPathSplashFillColor(R.color.Wheat); //path object filling color
 
         //Customize Title
-        configSplash.setTitleSplash("Food App");
+        configSplash.setTitleSplash("DINER TAP");
         configSplash.setTitleTextColor(android.R.color.white);
         configSplash.setTitleTextSize(30f); //float value
         configSplash.setAnimTitleDuration(1000);

@@ -33,7 +33,6 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class FriendsActivityPagerAdapter extends PagerAdapter {
-
     private ArrayList<FriendsActivitiesDetailsModel> activityList;
     private LayoutInflater inflater;
     private Context context;
@@ -65,23 +64,26 @@ public class FriendsActivityPagerAdapter extends PagerAdapter {
         final ShareButton fb_share_button = (ShareButton) myImageLayout.findViewById(R.id.fb_share_button);
         fb_share_button.bringToFront();
 
+        TextView tvComment = (TextView) myImageLayout.findViewById(R.id.tvComment);
+        TextView tvLike = (TextView) myImageLayout.findViewById(R.id.tvLike);
+
         ShareDialog shareDialog = new ShareDialog((Activity) context);
 
         tvActivityText.setText(detailsModel.getText());
         Glide.with(context).load(detailsModel.getImage()).centerCrop().into(ivActivityPic);
 
         final Bitmap[] bitmap = {null};
+
         fb_share_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FriendsActivitiesDetailsActivity.pausePagerImagesSlide = true;
                 Bitmap b = null;
-                b = ((GlideBitmapDrawable)ivActivityPic.getDrawable().getCurrent()).getBitmap();
+                b = ((GlideBitmapDrawable) ivActivityPic.getDrawable().getCurrent()).getBitmap();
 
                 bitmap[0] = b;
             }
         });
-
 
         SharePhoto photo = new SharePhoto.Builder()
                 .setBitmap(bitmap[0])
@@ -90,6 +92,13 @@ public class FriendsActivityPagerAdapter extends PagerAdapter {
                 .addPhoto(photo)
                 .build();
         fb_share_button.setShareContent(content);
+
+        tvComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FriendsActivitiesDetailsActivity.pausePagerImagesSlide = true;
+            }
+        });
 
         ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
