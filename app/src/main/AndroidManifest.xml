@@ -59,7 +59,10 @@
         <activity android:name=".HelpActivity" />
         <activity android:name=".RestaurantReservationActivity" />
         <activity android:name=".CheckoutActivity" />
-        <activity android:name=".FriendsActivitiesDetailsActivity"></activity>
+        <activity android:name=".FriendsActivitiesDetailsActivity" />
+        <activity android:name=".ReserveTableActivity" />
+        <activity android:name=".ConfirmOrderActivity" />
+        <activity android:name=".ThankYouActivity"></activity>
     </application>
 
 </manifest>

@@ -5,9 +5,8 @@ android {
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.codiansoft.foodapp"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 25
-        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -30,6 +29,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:appcompat-v7:25.0.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -44,11 +45,10 @@ dependencies {
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.google.android.gms:play-services:11.0.4'
-    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.hbb20:ccp:2.0.3'
     compile 'com.simplify:simplify-android:3.0.0'
     compile 'com.github.mukeshsolanki:country-picker-android:1.1.9'
     compile 'com.android.support:multidex:1.0.1'
-
+    compile 'com.github.gastricspark:scrolldatepicker:0.0.1'
     testCompile 'junit:junit:4.12'
 }

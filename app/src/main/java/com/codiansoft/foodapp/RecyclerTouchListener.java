@@ -10,10 +10,7 @@ import android.view.View;
  * Created by Codiansoft on 9/21/2017.
  */
 
-
-
 public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
-
     public interface ClickListener {
         void onClick(View view, int position);
 
@@ -58,5 +55,4 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
     }
-
 }

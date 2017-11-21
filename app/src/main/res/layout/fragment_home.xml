@@ -132,8 +132,7 @@
                                 android:id="@+id/featured_pager"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
-                                android:layout_alignParentTop="true"
-                                android:background="@drawable/pic4" />
+                                android:layout_alignParentTop="true" />
 
                             <me.relex.circleindicator.CircleIndicator
                                 android:id="@+id/featured_indicator"
@@ -173,8 +172,7 @@
                                 android:id="@+id/new_pager"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
-                                android:layout_alignParentTop="true"
-                                android:background="@drawable/pic4" />
+                                android:layout_alignParentTop="true" />
 
                             <me.relex.circleindicator.CircleIndicator
                                 android:id="@+id/new_indicator"
@@ -214,8 +212,7 @@
                                 android:id="@+id/popular_pager"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
-                                android:layout_alignParentTop="true"
-                                android:background="@drawable/pic4" />
+                                android:layout_alignParentTop="true" />
 
                             <me.relex.circleindicator.CircleIndicator
                                 android:id="@+id/popular_indicator"
@@ -255,8 +252,7 @@
                                 android:id="@+id/under_thirty_pager"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
-                                android:layout_alignParentTop="true"
-                                android:background="@drawable/pic4" />
+                                android:layout_alignParentTop="true" />
 
                             <me.relex.circleindicator.CircleIndicator
                                 android:id="@+id/under_thirty_indicator"
@@ -296,8 +292,7 @@
                                 android:id="@+id/friends_fav_pager"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
-                                android:layout_alignParentTop="true"
-                                android:background="@drawable/pic4" />
+                                android:layout_alignParentTop="true" />
 
                             <me.relex.circleindicator.CircleIndicator
                                 android:id="@+id/friends_fav_indicator"

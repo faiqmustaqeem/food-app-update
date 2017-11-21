@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import com.codiansoft.foodapp.dialog.UploadActivityPostDialog;
 import com.codiansoft.foodapp.model.FriendsActivitiesModel;
 import com.codiansoft.foodapp.model.FriendsContactsModel;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +77,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     TextView tvUserName, tvActivityTitle, tvDateAndTime;
     ImageView ivProfilePic;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -341,6 +344,23 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        Toast.makeText(getActivity(), "resul", Toast.LENGTH_SHORT).show();
         if (requestCode == 1 & resultCode != Activity.RESULT_CANCELED) {
+
+
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                newPostBitmap = BitmapFactory.decodeStream(imageStream);
+                newPostBitmap = Bitmap.createScaledBitmap(newPostBitmap, newPostBitmap.getWidth() / 3, newPostBitmap.getHeight() / 3, false);
+
+                UploadActivityPostDialog d = new UploadActivityPostDialog(getActivity(), newPostBitmap);
+                d.show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            /*
+
             try {
 //                newPostBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), newPostImageUri);
                 newPostBitmap = (Bitmap) data.getExtras().get("data");
@@ -351,7 +371,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
         } else if (requestCode == 2 & resultCode != Activity.RESULT_CANCELED) {
             try {
 //                newPostBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), newPostImageUri);

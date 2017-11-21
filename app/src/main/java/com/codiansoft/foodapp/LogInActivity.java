@@ -151,23 +151,24 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                                 editor.putString("userID", userdata.getString("id"));
                                 editor.commit();
 
-                                progressDialog.hide();
+                                progressDialog.dismiss();
                                 Intent restaurantsIntent = new Intent(LogInActivity.this, MainActivity.class);
                                 startActivity(restaurantsIntent);
                                 finish();
                             } else {
                                 Toast.makeText(LogInActivity.this, "" + result.getString("response"), Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
                             }
                         } catch (Exception ee) {
                             Toast.makeText(LogInActivity.this, ee.toString(), Toast.LENGTH_SHORT).show();
-                            progressDialog.hide();
+                            progressDialog.dismiss();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        progressDialog.hide();
+                        progressDialog.dismiss();
                         NetworkResponse response = error.networkResponse;
                         if (response != null && response.data != null) {
                             switch (response.statusCode) {

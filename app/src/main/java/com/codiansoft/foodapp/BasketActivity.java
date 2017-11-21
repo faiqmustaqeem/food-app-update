@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ public class BasketActivity extends AppCompatActivity implements OnMapReadyCallb
     ImageView ivBack;
     GoogleMap myGoogleMap;
     Button bOrderNow;
+    EditText etAdditionalNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,8 @@ public class BasketActivity extends AppCompatActivity implements OnMapReadyCallb
         bOrderNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BasketActivity.this, CheckoutActivity.class);
+                GlobalClass.basketExtraNotes = etAdditionalNotes.getText().toString();
+                Intent intent = new Intent(BasketActivity.this, ConfirmOrderActivity.class);
                 startActivity(intent);
             }
         });
@@ -91,6 +94,7 @@ public class BasketActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void initUI() {
+        etAdditionalNotes = (EditText) findViewById(R.id.etAdditionalNotes);
         bOrderNow = (Button) findViewById(R.id.bOrderNow);
         tvRestaurantName = (TextView) findViewById(R.id.tvRestaurantName);
         tvRestaurantDesc = (TextView) findViewById(R.id.tvRestaurantDesc);
@@ -139,7 +143,7 @@ public class BasketActivity extends AppCompatActivity implements OnMapReadyCallb
     private void setRestaurantLocation(double lat, double lng) {
         // Add a marker in Sydney, Australia, and move the camera.
 //        LatLng restaurantLocation = new LatLng(-33.852, 151.211);
-        LatLng restaurantLocation = new LatLng(lat, lat);
+        LatLng restaurantLocation = new LatLng(lat, lng);
         myGoogleMap.addMarker(new MarkerOptions().position(restaurantLocation).title(GlobalClass.basketRestaurantName));
         myGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(restaurantLocation));
     }

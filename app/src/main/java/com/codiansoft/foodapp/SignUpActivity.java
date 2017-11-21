@@ -130,11 +130,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             JSONObject Jobject = new JSONObject(response);
                             JSONObject result = Jobject.getJSONObject("result");
                             if (result.getString("status").equals("success")) {
-                                JSONObject userdata = result.getJSONObject("userdata");
 
                                 SharedPreferences settings = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = settings.edit();
-                                editor.putString("userID", userdata.getString("id"));
+                                editor.putString("userID", result.getString("response"));
+                                editor.putString("apiSecretKey", result.getString("response"));
                                 editor.commit();
 
                                 progressDialog.hide();
@@ -189,9 +189,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 params.put("email", etEmail.getText().toString());
                 params.put("password", etPassword.getText().toString());
                 params.put("phone", etContact.getText().toString());
-                params.put("date_ob", dpBirthday.getDayOfMonth() + "-" + dpBirthday.getMonth() + "-" + dpBirthday.getYear());
+                params.put("date_ob", dpBirthday.getDayOfMonth() + "-" + (dpBirthday.getMonth()+1) + "-" + dpBirthday.getYear());
                 params.put("address", etFullName.getText().toString());
-                params.put("office_address", etFullName.getText().toString());
+                params.put("office_address", etOfficeAddress.getText().toString());
                 return params;
             }
         };

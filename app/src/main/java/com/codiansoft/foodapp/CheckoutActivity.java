@@ -1,5 +1,6 @@
 package com.codiansoft.foodapp;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +24,6 @@ import java.util.List;
 public class CheckoutActivity extends AppCompatActivity {
     Simplify simplify;
     private CountryPicker mCountryPicker;
-    Button bAddPayment;
     TextView tvSelectedCountry;
     EditText etCardNumber;
     EditText etMonth;
@@ -91,7 +91,7 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-                if (validInputFields()) {
+                /*if (validInputFields()) {
                     Card card = new Card()
                             .setNumber(etCardNumber.getText().toString())
                             .setExpMonth(etMonth.getText().toString())
@@ -113,7 +113,9 @@ public class CheckoutActivity extends AppCompatActivity {
                             Toast.makeText(CheckoutActivity.this, "" + throwable.toString(), Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
+                }*/
+                Intent i = new Intent(CheckoutActivity.this, ThankYouActivity.class);
+                startActivity(i);
             }
         });
     }
@@ -142,7 +144,6 @@ public class CheckoutActivity extends AppCompatActivity {
 //        Country[] countries = Country.COUNTRIES; //Array of all countries sorted by ISO code
         Country country = Country.getCountryFromSIM(this); //Get user country based on SIM card
         mCountryPicker = CountryPicker.newInstance("Select Country");
-        bAddPayment = (Button) findViewById(R.id.bAddPayment);
         etCardNumber = (EditText) findViewById(R.id.etCardNumber);
         etMonth = (EditText) findViewById(R.id.etMonth);
         etYear = (EditText) findViewById(R.id.etYear);

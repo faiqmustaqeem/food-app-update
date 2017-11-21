@@ -105,8 +105,11 @@ public class RestaurantReservationActivity extends AppCompatActivity implements 
         rvTables.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), rvTables, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ReserveTableDialog d = new ReserveTableDialog(RestaurantReservationActivity.this, reservationTablesList.get(position).getID(), reservationTablesList.get(position).getTitle(), reservationTablesList.get(position).getCapacity());
-                d.show();
+                /*ReserveTableDialog d = new ReserveTableDialog(RestaurantReservationActivity.this, reservationTablesList.get(position).getID(), reservationTablesList.get(position).getTitle(), reservationTablesList.get(position).getCapacity());
+                d.show();*/
+                Intent intent = new Intent(RestaurantReservationActivity.this, ReserveTableActivity.class);
+                startActivity(intent);
+
             }
 
             @Override
