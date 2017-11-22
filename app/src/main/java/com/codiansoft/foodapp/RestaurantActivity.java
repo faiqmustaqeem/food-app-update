@@ -1,6 +1,8 @@
 package com.codiansoft.foodapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -20,6 +22,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.codiansoft.foodapp.adapter.ResFragOneAdapter;
 import com.codiansoft.foodapp.adapter.ResFragTwoAdapter;
@@ -31,7 +45,13 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.nineoldandroids.view.ViewHelper;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.fragOneAdapter;
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.fragOneItems;
@@ -55,7 +75,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
     ArrayList<String> tabPageTitles = new ArrayList<>();
     int tabsQty = 4;
 
-    String restaurantID, restaurantTitle, restaurantDescription, restaurantDuration, restaurantImage;
+    String restaurantID, restaurantTitle, restaurantDescription, restaurantDuration, restaurantImage, branch, lat, lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +84,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_restaurant);
 //        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -96,6 +115,10 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         tabLayout.addTab(tabLayout.newTab().setText("MENU").setIcon(android.R.drawable.btn_minus));
         tabLayout.addTab(tabLayout.newTab().setText("LUNCH AND DINNER").setIcon(android.R.drawable.arrow_down_float));*/
 
+
+        fetchRestaurantMenu();
+
+
         tabPageTitles.add("Breakfast");
         tabPageTitles.add("Lunch and Diner");
         tabPageTitles.add("Menu");
@@ -113,6 +136,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         }
         listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items));
 
+
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -129,7 +153,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         });
 
 
-
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -144,8 +167,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 viewPager.getParent().requestDisallowInterceptTouchEvent(true);
             }
         });
-
-
 
 
         getFragOneItems();
@@ -248,6 +269,81 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 finish();
             }
         });
+    }
+
+    private void fetchRestaurantMenu() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, GlobalClass.RESTAURANT_MENU_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        try {
+                            JSONObject Jobject = new JSONObject(response);
+                            JSONObject result = Jobject.getJSONObject("result");
+                            if (result.getString("status").equals("success")) {
+                                branch = result.getJSONObject("restaurant_details").getString("branch");
+                                lat = result.getJSONObject("restaurant_details").getString("lat");
+                                lng = result.getJSONObject("restaurant_details").getString("lng");
+
+
+                                JSONArray menuCategories = result.getJSONArray("categories");
+                                if (menuCategories.length() > 0) {
+                                    for (int i = 0; i < menuCategories.length(); i++) {
+                                        JSONObject menuTab = menuCategories.getJSONObject(i);
+                                        JSONArray tabItems = menuTab.getJSONArray("Menus");
+                                        for (int j = 0; j < tabItems.length(); j++) {
+                                            tabItems.getJSONObject(i).getString("id");
+
+                                            /*fragOneItems = new ArrayList<FragmentOneDataModel>();
+                                            fragOneAdapter = new ResFragOneAdapter(RestaurantActivity.this, fragOneItems);*/
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        } catch (Exception ee) {
+                            Toast.makeText(RestaurantActivity.this, "" + ee.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                            Toast.makeText(RestaurantActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                        } else if (error instanceof AuthFailureError) {
+
+                            //TODO
+                        } else if (error instanceof ServerError) {
+
+                            //TODO
+                        } else if (error instanceof NetworkError) {
+
+                            //TODO
+                        } else if (error instanceof ParseError) {
+
+                            //TODO
+                        }
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                SharedPreferences settings = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+                String userID = settings.getString("userID", "defaultValue");
+                String apiSecretKey = settings.getString("apiSecretKey", "defaultValue");
+
+                params.put("api_secret", apiSecretKey);
+                params.put("restaurant_id", restaurantID);
+                params.put("branch_id", "1");
+                return params;
+            }
+        };
+        queue.add(postRequest);
     }
 
     private void getFragTwoItems() {
@@ -366,7 +462,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 //        "https://media-cdn.tripadvisor.com/media/photo-s/0c/8c/05/0b/a-fine-dining-pakistani.jpg"
 //        Picasso.with(this).load("https://www.nordicchoicehotels.com/globalassets/global/hotel-pictures/clarion-hotel/clarion-hotel-energy/food--beverage/restaurant-details-energy-hotel-stavanger.jpg?t=SmartScale%7C620x346").centerCrop();
-        Glide.with(this).load("https://www.nordicchoicehotels.com/globalassets/global/hotel-pictures/clarion-hotel/clarion-hotel-energy/food--beverage/restaurant-details-energy-hotel-stavanger.jpg?t=SmartScale%7C620x346").into(mImageView);
+        Glide.with(this).load(restaurantImage).into(mImageView);
         listView.setScrollViewCallbacks(this);
 
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {

@@ -32,6 +32,8 @@ import java.util.ArrayList;
 
 public class RestaurantFragmentOne extends Fragment implements ObservableScrollViewCallbacks {
 
+    public static int fragmentPosition;
+
     ObservableRecyclerView recycler_view1;
     public static ProgressBar progressBar;
     public static ArrayList<FragmentOneDataModel> fragOneItems;

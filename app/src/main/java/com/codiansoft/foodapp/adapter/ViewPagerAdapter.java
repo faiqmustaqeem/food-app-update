@@ -10,6 +10,8 @@ import com.codiansoft.foodapp.fragment.RestaurantFragmentTwo;
 
 import java.util.ArrayList;
 
+import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.fragmentPosition;
+
 /**
  * Created by Codiansoft on 8/16/2017.
  */
@@ -26,6 +28,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        fragmentPosition = position;
         return new RestaurantFragmentOne();
     }
 
