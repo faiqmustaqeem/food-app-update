@@ -16,6 +16,7 @@ public class GlobalClass {
     public static final String RESTAURANT_MENU_URL = "http://codiansoft.com/FoodApp/api/restaurantMenu_list";
     public static final String MOST_POPULAR_RESTAURANTS_URL = "http://codiansoft.com/FoodApp/api/most_popular";
     public static final String ALL_SLIDERS_RESTAURANTS_URL = "http://codiansoft.com/FoodApp_update/api/homeScreen";
+    public static final String FETCH_USER_DETAILS_URL = "http://codiansoft.com/FoodApp_update/api/user_account";
     public static String basketRestaurantName = "", basketRestaurantDescription = "";
     public static String basketExtraNotes;
     public static String restaurantServiceType;

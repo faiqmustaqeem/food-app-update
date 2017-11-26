@@ -14,15 +14,40 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.codiansoft.foodapp.dialog.ProfileEditPermissionDialog;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.hbb20.CountryCodePicker;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class AccountActivity extends AppCompatActivity implements View.OnClickListener {
+    SweetAlertDialog pDialog;
     CountryCodePicker ccp;
-    ImageView ivBack;
+    ImageView ivBack, ivProfilePic;
     EditText etFirstName, etLastName, etEmail, etMobileNumber;
     TextView tvEditOrUpdate, tvSignOut;
     public static boolean canEdit = false;
@@ -35,7 +60,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         getSupportActionBar().hide();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initUI();
-
+        fetchUserDetails();
         d.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -47,7 +72,74 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    private void fetchUserDetails() {
+        pDialog.show();
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest postRequest = new StringRequest(Request.Method.POST, GlobalClass.FETCH_USER_DETAILS_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        try {
+                            JSONObject Jobject = new JSONObject(response);
+                            JSONObject result = Jobject.getJSONObject("result");
+                            if (result.getString("status").equals("success")) {
+                                JSONObject userDetails = result.getJSONObject("userInfo");
+                                String[] fullName = userDetails.getString("username").split(" ");
+                                etFirstName.setText(fullName[0]);
+                                etLastName.setText(fullName[1]);
+                                etEmail.setText(userDetails.getString("email"));
+                                etMobileNumber.setText(userDetails.getString("phone"));
+                                Glide.with(AccountActivity.this).load(userDetails.getString("picture")).centerCrop().into(ivProfilePic);
+                            }
+                        } catch (Exception ee) {
+                            Toast.makeText(AccountActivity.this, "" + ee.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        pDialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                            Toast.makeText(AccountActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                        } else if (error instanceof AuthFailureError) {
+
+                            //TODO
+                        } else if (error instanceof ServerError) {
+
+                            //TODO
+                        } else if (error instanceof NetworkError) {
+
+                            //TODO
+                        } else if (error instanceof ParseError) {
+
+                            //TODO
+                        }
+                        pDialog.dismiss();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                SharedPreferences settings = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+                String userID = settings.getString("userID", "defaultValue");
+                String apiSecretKey = settings.getString("apiSecretKey", "defaultValue");
+
+                params.put("api_secret", apiSecretKey);
+                return params;
+            }
+        };
+        queue.add(postRequest);
+    }
+
     private void initUI() {
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(android.R.color.darker_gray);
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
+
         d = new ProfileEditPermissionDialog(AccountActivity.this);
         canEdit = false;
         tvEditOrUpdate = (TextView) findViewById(R.id.tvEditOrUpdate);
@@ -57,6 +149,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         etLastName = (EditText) findViewById(R.id.etLastName);
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         ccp = (CountryCodePicker) findViewById(R.id.ccp);
+        ivProfilePic = (ImageView) findViewById(R.id.ivProfilePic);
         ivBack = (ImageView) findViewById(R.id.ivBack);
         ivBack.setOnClickListener(this);
         tvEditOrUpdate.setOnClickListener(this);

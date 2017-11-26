@@ -21,6 +21,9 @@ android {
     aaptOptions {
         cruncherEnabled = false
     }
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    }
 }
 
 dependencies {
@@ -50,5 +53,7 @@ dependencies {
     compile 'com.github.mukeshsolanki:country-picker-android:1.1.9'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.gastricspark:scrolldatepicker:0.0.1'
+    compile 'com.google.guava:guava:23.5-android'
+    compile 'cn.pedant.sweetalert:library:1.3'
     testCompile 'junit:junit:4.12'
 }

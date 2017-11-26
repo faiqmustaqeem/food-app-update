@@ -50,6 +50,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,6 +60,8 @@ import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.fragOneLayou
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentTwo.fragTwoAdapter;
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentTwo.fragTwoItems;
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentTwo.fragTwoLayoutManager;
+
+import com.google.common.collect.Lists;
 
 public class RestaurantActivity extends AppCompatActivity implements ObservableScrollViewCallbacks, View.OnClickListener {
     ObservableListView listView;
@@ -73,7 +76,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
     LinearLayout llTopBar;
     ImageView ivShare, ivBack, ivTopBarBack, ivTopBarShare;
     ArrayList<String> tabPageTitles = new ArrayList<>();
-    int tabsQty = 4;
+    int tabsQty = 3;
 
     String restaurantID, restaurantTitle, restaurantDescription, restaurantDuration, restaurantImage, branch, lat, lng;
 
@@ -116,7 +119,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         tabLayout.addTab(tabLayout.newTab().setText("LUNCH AND DINNER").setIcon(android.R.drawable.arrow_down_float));*/
 
 
-        fetchRestaurantMenu();
+//        fetchRestaurantMenu();
 
 
         tabPageTitles.add("Breakfast");
@@ -273,7 +276,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
 
     private void fetchRestaurantMenu() {
         RequestQueue queue = Volley.newRequestQueue(this);
-
         StringRequest postRequest = new StringRequest(Request.Method.POST, GlobalClass.RESTAURANT_MENU_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -287,22 +289,20 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                 lat = result.getJSONObject("restaurant_details").getString("lat");
                                 lng = result.getJSONObject("restaurant_details").getString("lng");
 
-
                                 JSONArray menuCategories = result.getJSONArray("categories");
+                                List<List<FragmentOneDataModel>> allMenu = new ArrayList<List<FragmentOneDataModel>>(tabsQty);
                                 if (menuCategories.length() > 0) {
                                     for (int i = 0; i < menuCategories.length(); i++) {
                                         JSONObject menuTab = menuCategories.getJSONObject(i);
-                                        JSONArray tabItems = menuTab.getJSONArray("Menus");
+                                        List<String> tabsList = Lists.newArrayList(menuTab.keys());
+                                        JSONArray tabItems = menuTab.getJSONArray(tabsList.get(i));
                                         for (int j = 0; j < tabItems.length(); j++) {
                                             tabItems.getJSONObject(i).getString("id");
-
                                             /*fragOneItems = new ArrayList<FragmentOneDataModel>();
                                             fragOneAdapter = new ResFragOneAdapter(RestaurantActivity.this, fragOneItems);*/
-
                                         }
                                     }
                                 }
-
                             }
                         } catch (Exception ee) {
                             Toast.makeText(RestaurantActivity.this, "" + ee.getMessage(), Toast.LENGTH_SHORT).show();
