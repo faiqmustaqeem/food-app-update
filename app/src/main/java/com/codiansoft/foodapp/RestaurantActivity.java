@@ -64,12 +64,13 @@ import static com.codiansoft.foodapp.fragment.RestaurantFragmentTwo.fragTwoLayou
 import com.google.common.collect.Lists;
 
 public class RestaurantActivity extends AppCompatActivity implements ObservableScrollViewCallbacks, View.OnClickListener {
+    public static List<List<FragmentOneDataModel>> allMenu;
     ObservableListView listView;
     NestedScrollView scrollView;
     public static ImageView mImageView;
     public static CardView cvRestaurantDetails;
     public static TabLayout tabLayout;
-    ViewPager viewPager;
+    public static ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
     FloatingActionButton fabScrollNavigation;
     TextView tvViewCart, tvRestaurantName, tvRestaurantDescription, tvBasketItemsQuantity;
@@ -113,25 +114,22 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
 
         getSupportActionBar().hide();
         initUI();
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
 
 /*        tabLayout.addTab(tabLayout.newTab().setText("BREAKFAST").setIcon(android.R.drawable.arrow_up_float));
         tabLayout.addTab(tabLayout.newTab().setText("MENU").setIcon(android.R.drawable.btn_minus));
         tabLayout.addTab(tabLayout.newTab().setText("LUNCH AND DINNER").setIcon(android.R.drawable.arrow_down_float));*/
 
 
-//        fetchRestaurantMenu();
+        fetchRestaurantMenu();
 
 
-        tabPageTitles.add("Breakfast");
+        /*tabPageTitles.add("Breakfast");
         tabPageTitles.add("Lunch and Diner");
         tabPageTitles.add("Menu");
-        tabPageTitles.add("Lunch and Diner");
+        tabPageTitles.add("Lunch and Diner");*/
 
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), tabsQty, tabPageTitles);
-        viewPager.setAdapter(viewPagerAdapter);
-        viewPager.clearFocus();
-        tabLayout.setupWithViewPager(viewPager);
+
 
         ArrayList<String> items = new ArrayList<String>();
         for (int i = 1; i <= 100; i++) {
@@ -172,8 +170,8 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         });
 
 
-        getFragOneItems();
-        getFragTwoItems();
+//        getFragOneItems();
+//        getFragTwoItems();
 
         fabScrollNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,21 +287,35 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                 lat = result.getJSONObject("restaurant_details").getString("lat");
                                 lng = result.getJSONObject("restaurant_details").getString("lng");
 
+                                tabsQty = result.getJSONObject("restaurant_details").getJSONArray("category_names").length();
+
+                                for (int a = 0; a < tabsQty; a++) {
+                                    tabPageTitles.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getString(a));
+                                }
+
                                 JSONArray menuCategories = result.getJSONArray("categories");
-                                List<List<FragmentOneDataModel>> allMenu = new ArrayList<List<FragmentOneDataModel>>(tabsQty);
+                                allMenu = new ArrayList<List<FragmentOneDataModel>>(tabsQty);
                                 if (menuCategories.length() > 0) {
                                     for (int i = 0; i < menuCategories.length(); i++) {
+                                        fragOneItems = new ArrayList<FragmentOneDataModel>();
                                         JSONObject menuTab = menuCategories.getJSONObject(i);
                                         List<String> tabsList = Lists.newArrayList(menuTab.keys());
-                                        JSONArray tabItems = menuTab.getJSONArray(tabsList.get(i));
+                                        JSONArray tabItems = menuTab.getJSONArray(tabPageTitles.get(i));
                                         for (int j = 0; j < tabItems.length(); j++) {
-                                            tabItems.getJSONObject(i).getString("id");
-                                            /*fragOneItems = new ArrayList<FragmentOneDataModel>();
-                                            fragOneAdapter = new ResFragOneAdapter(RestaurantActivity.this, fragOneItems);*/
+//                                            tabItems.getJSONObject(i).getString("id");
+                                            fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("id"), tabItems.getJSONObject(j).getString("item"), tabItems.getJSONObject(j).getString("desc"), tabItems.getJSONObject(j).getString("price"), tabItems.getJSONObject(j).getString("picture")));
+//                                            fragOneAdapter = new ResFragOneAdapter(RestaurantActivity.this, fragOneItems);
                                         }
+                                        allMenu.add(fragOneItems);
                                     }
                                 }
+                                viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), tabsQty, tabPageTitles);
+                                viewPager.setAdapter(viewPagerAdapter);
+                                viewPager.setOffscreenPageLimit(2);
+                                viewPager.clearFocus();
+                                tabLayout.setupWithViewPager(viewPager);
                             }
+
                         } catch (Exception ee) {
                             Toast.makeText(RestaurantActivity.this, "" + ee.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -338,7 +350,8 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 String apiSecretKey = settings.getString("apiSecretKey", "defaultValue");
 
                 params.put("api_secret", apiSecretKey);
-                params.put("restaurant_id", restaurantID);
+//                params.put("restaurant_id", restaurantID);
+                params.put("restaurant_id", "1");
                 params.put("branch_id", "1");
                 return params;
             }

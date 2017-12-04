@@ -26,6 +26,9 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 
 import java.util.ArrayList;
 
+import static com.codiansoft.foodapp.RestaurantActivity.allMenu;
+import static com.codiansoft.foodapp.RestaurantActivity.viewPager;
+
 /**
  * Created by Codiansoft on 8/16/2017.
  */
@@ -45,60 +48,65 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.restaurant_fragment_one, container, false);
-        recycler_view1 = (ObservableRecyclerView) rootView.findViewById(R.id.recycler_view1);
-        fabScrollNavigation = (FloatingActionButton) rootView.findViewById(R.id.fabScrollNavigation);
+        View rootView = null;
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.restaurant_fragment_one, container, false);
+            recycler_view1 = (ObservableRecyclerView) rootView.findViewById(R.id.recycler_view1);
+            fabScrollNavigation = (FloatingActionButton) rootView.findViewById(R.id.fabScrollNavigation);
 
-        getItems();
-        fragOneLayoutManager = new LinearLayoutManager(getActivity()) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recycler_view1.setLayoutManager(fragOneLayoutManager);
+            getItems();
+            fragOneLayoutManager = new LinearLayoutManager(getActivity()) {
+                @Override
+                public boolean canScrollVertically() {
+                    return false;
+                }
+            };
+            recycler_view1.setLayoutManager(fragOneLayoutManager);
+            recycler_view1.setItemAnimator(new DefaultItemAnimator());
 
-        recycler_view1.setItemAnimator(new DefaultItemAnimator());
-        recycler_view1.setAdapter(fragOneAdapter);
-        recycler_view1.setScrollViewCallbacks((ObservableScrollViewCallbacks) getActivity());
+//            fragmentPosition = viewPager.getCurrentItem();
+            int position = this.getArguments().getInt("position");
+            fragOneAdapter = new ResFragOneAdapter(getActivity(), new ArrayList<FragmentOneDataModel>(allMenu.get(position)));
+            recycler_view1.setAdapter(fragOneAdapter);
+            recycler_view1.setScrollViewCallbacks((ObservableScrollViewCallbacks) getActivity());
 
-        recycler_view1.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent i = new Intent(getActivity(), FoodActivity.class);
-                i.putExtra("foodID", fragOneItems.get(position).getID());
-                i.putExtra("foodTitle", fragOneItems.get(position).getTitle());
-                i.putExtra("foodDescription", fragOneItems.get(position).getDescription());
-                i.putExtra("foodPrice", fragOneItems.get(position).getPrice());
-                i.putExtra("foodImage", fragOneItems.get(position).getImageURL());
-                startActivity(i);
-            }
-        }));
+            recycler_view1.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent i = new Intent(getActivity(), FoodActivity.class);
+                    i.putExtra("foodID", fragOneItems.get(position).getID());
+                    i.putExtra("foodTitle", fragOneItems.get(position).getTitle());
+                    i.putExtra("foodDescription", fragOneItems.get(position).getDescription());
+                    i.putExtra("foodPrice", fragOneItems.get(position).getPrice());
+                    i.putExtra("foodImage", fragOneItems.get(position).getImageURL());
+                    startActivity(i);
+                }
+            }));
 
-        fabScrollNavigation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(getActivity(), fabScrollNavigation);
+            fabScrollNavigation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Creating the instance of PopupMenu
+                    PopupMenu popup = new PopupMenu(getActivity(), fabScrollNavigation);
 
 //                popup.getMenu().add(groupId, itemId, order, title);
 
-                for (int i = 0; i < fragOneItems.size(); i++) {
-                    if (!fragOneItems.get(i).isRow()) {
-                        popup.getMenu().add(1, i, i, fragOneItems.get(i).getSectionTitle());
-                    }
-                }
-
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-
-                        for (int i = 0; i < fragOneItems.size(); i++) {
-                            if (item.getTitle().equals(fragOneItems.get(i).getSectionTitle())) {
-                                fragOneLayoutManager.scrollToPosition(i);
-                                break;
-                            }
+                    for (int i = 0; i < fragOneItems.size(); i++) {
+                        if (!fragOneItems.get(i).isRow()) {
+                            popup.getMenu().add(1, i, i, fragOneItems.get(i).getSectionTitle());
                         }
+                    }
+
+                    //registering popup with OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+
+                            for (int i = 0; i < fragOneItems.size(); i++) {
+                                if (item.getTitle().equals(fragOneItems.get(i).getSectionTitle())) {
+                                    fragOneLayoutManager.scrollToPosition(i);
+                                    break;
+                                }
+                            }
 
                         /*switch (item.getItemId()) {
                             case 1:
@@ -110,13 +118,14 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                                 Toast.makeText(getActivity(), "second", Toast.LENGTH_SHORT).show();
                                 break;
                         }*/
-                        return true;
-                    }
-                });
+                            return true;
+                        }
+                    });
 
-                popup.show();//showing popup menu
-            }
-        });
+                    popup.show();//showing popup menu
+                }
+            });
+        }
 
         return rootView;
     }
