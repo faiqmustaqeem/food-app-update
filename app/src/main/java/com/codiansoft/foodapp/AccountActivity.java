@@ -85,12 +85,11 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
                             JSONObject result = Jobject.getJSONObject("result");
                             if (result.getString("status").equals("success")) {
                                 JSONObject userDetails = result.getJSONObject("userInfo");
-                                String[] fullName = userDetails.getString("username").split(" ");
-                                etFirstName.setText(fullName[0]);
-                                etLastName.setText(fullName[1]);
+                                String fullName = userDetails.getString("username");
+                                etFirstName.setText(fullName);
                                 etEmail.setText(userDetails.getString("email"));
                                 etMobileNumber.setText(userDetails.getString("phone"));
-                                Glide.with(AccountActivity.this).load(userDetails.getString("picture")).centerCrop().into(ivProfilePic);
+                                Glide.with(AccountActivity.this).load(userDetails.getString("picture")).placeholder(R.drawable.ic_profile_pic).centerCrop().into(ivProfilePic);
                             }
                         } catch (Exception ee) {
                             Toast.makeText(AccountActivity.this, "" + ee.getMessage(), Toast.LENGTH_SHORT).show();

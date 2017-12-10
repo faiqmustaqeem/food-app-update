@@ -352,6 +352,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 params.put("api_secret", apiSecretKey);
 //                params.put("restaurant_id", restaurantID);
                 params.put("restaurant_id", "1");
+                params.put("restaurant_id", restaurantID);
                 params.put("branch_id", "1");
                 return params;
             }
