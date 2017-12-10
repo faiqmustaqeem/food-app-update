@@ -55,6 +55,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import static com.codiansoft.foodapp.fragment.SearchFragment.gvSearchCategories;
 import static com.codiansoft.foodapp.fragment.SearchFragment.rvSearchedRestaurants;
+import static com.codiansoft.foodapp.fragment.ServiceRestaurantsFragment.serviceRestaurantType;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final int PERMISSIONS_CODE = 1;
@@ -495,6 +496,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Fragment deliveryServiceRestaurantsFragment = fm.findFragmentByTag(ServiceRestaurantsFragment.TAG);
 
                 deliveryServiceRestaurantsFragment = new ServiceRestaurantsFragment();
+                serviceRestaurantType = "1";
                 fm.beginTransaction()
                         .replace(R.id.container, deliveryServiceRestaurantsFragment, ServiceRestaurantsFragment.TAG)
 //                        .addToBackStack(null)  // uncomment this line if you want to be able to return to the prev. fragment with "back" button
@@ -518,6 +520,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Fragment quickServiceRestaurantsFragment = fm.findFragmentByTag(ServiceRestaurantsFragment.TAG);
 
                 quickServiceRestaurantsFragment = new ServiceRestaurantsFragment();
+                serviceRestaurantType = "4";
                 fm.beginTransaction()
                         .replace(R.id.container, quickServiceRestaurantsFragment, ServiceRestaurantsFragment.TAG)
 //                        .addToBackStack(null)  // uncomment this line if you want to be able to return to the prev. fragment with "back" button
@@ -541,6 +544,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Fragment takeawayServiceRestaurantsFragment = fm.findFragmentByTag(ServiceRestaurantsFragment.TAG);
 
                 takeawayServiceRestaurantsFragment = new ServiceRestaurantsFragment();
+                serviceRestaurantType = "2";
                 fm.beginTransaction()
                         .replace(R.id.container, takeawayServiceRestaurantsFragment, ServiceRestaurantsFragment.TAG)
 //                        .addToBackStack(null)  // uncomment this line if you want to be able to return to the prev. fragment with "back" button
@@ -564,6 +568,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Fragment reservationServiceRestaurantsFragment = fm.findFragmentByTag(ServiceRestaurantsFragment.TAG);
 
                 reservationServiceRestaurantsFragment = new ServiceRestaurantsFragment();
+                serviceRestaurantType = "3";
                 fm.beginTransaction()
                         .replace(R.id.container, reservationServiceRestaurantsFragment, ServiceRestaurantsFragment.TAG)
 //                        .addToBackStack(null)  // uncomment this line if you want to be able to return to the prev. fragment with "back" button
