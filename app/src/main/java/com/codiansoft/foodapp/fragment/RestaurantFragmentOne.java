@@ -68,8 +68,6 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                 }
             };
 
-            tvFromTime.setText(tabTimes.get(viewPager.getCurrentItem()).getFromTime());
-            tvToTime.setText(tabTimes.get(viewPager.getCurrentItem()).getToTime());
 
 
 
@@ -78,6 +76,12 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
 
 //            fragmentPosition = viewPager.getCurrentItem();
             int position = this.getArguments().getInt("position");
+
+            tvFromTime.setText(tabTimes.get(position).getFromTime());
+            tvToTime.setText(tabTimes.get(position).getToTime());
+
+
+
             fragOneAdapter = new ResFragOneAdapter(getActivity(), new ArrayList<FragmentOneDataModel>(allMenu.get(position)));
             recycler_view1.setAdapter(fragOneAdapter);
             recycler_view1.setScrollViewCallbacks((ObservableScrollViewCallbacks) getActivity());
@@ -167,6 +171,12 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
     }
 }
