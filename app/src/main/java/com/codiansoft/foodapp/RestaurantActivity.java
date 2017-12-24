@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -40,6 +41,7 @@ import com.codiansoft.foodapp.adapter.ResFragTwoAdapter;
 import com.codiansoft.foodapp.adapter.ViewPagerAdapter;
 import com.codiansoft.foodapp.model.FragmentOneDataModel;
 import com.codiansoft.foodapp.model.FragmentTwoDataModel;
+import com.codiansoft.foodapp.model.TabTimesModel;
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -65,6 +67,7 @@ import com.google.common.collect.Lists;
 
 public class RestaurantActivity extends AppCompatActivity implements ObservableScrollViewCallbacks, View.OnClickListener {
     public static List<List<FragmentOneDataModel>> allMenu;
+    public static ArrayList<TabTimesModel> tabTimes = new ArrayList<TabTimesModel>();
     ObservableListView listView;
     NestedScrollView scrollView;
     public static ImageView mImageView;
@@ -77,9 +80,12 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
     LinearLayout llTopBar;
     ImageView ivShare, ivBack, ivTopBarBack, ivTopBarShare;
     ArrayList<String> tabPageTitles = new ArrayList<>();
+    ArrayList<String> tabSubCategory = new ArrayList<>();
     int tabsQty = 3;
 
     String restaurantID, restaurantTitle, restaurantDescription, restaurantDuration, restaurantImage, branch, lat, lng;
+
+    SwipeRefreshLayout swipe_refresh_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +94,8 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_restaurant);
 //        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+//        allMenu.clear();
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -128,7 +136,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         tabPageTitles.add("Lunch and Diner");
         tabPageTitles.add("Menu");
         tabPageTitles.add("Lunch and Diner");*/
-
 
 
         ArrayList<String> items = new ArrayList<String>();
@@ -181,7 +188,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
 
 //                popup.getMenu().add(groupId, itemId, order, title);
 
-                if (viewPager.getCurrentItem() == 0) {
+                /*if (viewPager.getCurrentItem() == 0) {
                     for (int i = 0; i < fragOneItems.size(); i++) {
                         if (!fragOneItems.get(i).isRow()) {
                             popup.getMenu().add(1, i, i, fragOneItems.get(i).getSectionTitle());
@@ -193,6 +200,11 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                             popup.getMenu().add(1, i, i, fragTwoItems.get(i).getSectionTitle());
                         }
                     }
+                }*/
+                for (int i = 0; i < allMenu.get(viewPager.getCurrentItem()).size(); i++) {
+                    if (!allMenu.get(viewPager.getCurrentItem()).get(i).isRow()) {
+                        popup.getMenu().add(1, i, i, allMenu.get(viewPager.getCurrentItem()).get(i).getSectionTitle());
+                    }
                 }
 
                 Toast.makeText(RestaurantActivity.this, "" + viewPager.getCurrentItem(), Toast.LENGTH_SHORT).show();
@@ -200,7 +212,23 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
+                        for (int i = 0; i < fragOneItems.size(); i++) {
+                            if (item.getTitle().equals(fragOneItems.get(i).getSectionTitle())) {
+                                fragOneLayoutManager.scrollToPosition(i);
+                                break;
+                            }
+                        }
+
+
+
+
+
+
+
+
+
+
+                        /*switch (item.getItemId()) {
                             case 1:
                                 if (viewPager.getCurrentItem() == 0) {
                                     Toast.makeText(RestaurantActivity.this, "first", Toast.LENGTH_SHORT).show();
@@ -238,7 +266,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                 }
                                 Toast.makeText(RestaurantActivity.this, "second", Toast.LENGTH_SHORT).show();
                                 break;
-                        }
+                        }*/
                         return true;
                     }
                 });
@@ -290,20 +318,47 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                 tabsQty = result.getJSONObject("restaurant_details").getJSONArray("category_names").length();
 
                                 for (int a = 0; a < tabsQty; a++) {
-                                    tabPageTitles.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getString(a));
+                                    tabPageTitles.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(a).getString("app_category"));
+
                                 }
+
 
                                 JSONArray menuCategories = result.getJSONArray("categories");
                                 allMenu = new ArrayList<List<FragmentOneDataModel>>(tabsQty);
                                 if (menuCategories.length() > 0) {
-                                    for (int i = 0; i < menuCategories.length(); i++) {
+                                    for (int i = 0; i < menuCategories.length(); i++) {                 // all tabs objects with items array
+
+                                        //tab timings
+                                        tabTimes.add(new TabTimesModel(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getString("to_time"), result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getString("from_time")));
+
+
+
+
+
+                                        tabSubCategory.clear();
+                                        tabSubCategory.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getJSONArray("sub_categories").getString(0));
+
+
+//                                        for (int j = 0; j < result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getJSONArray("sub_categories").length(); j++) {
+//                                            tabSubCategory.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getJSONArray("sub_categories").getString(j));
+//                                        }
+
                                         fragOneItems = new ArrayList<FragmentOneDataModel>();
+                                        fragOneItems.add(new FragmentOneDataModel(tabSubCategory.get(0), true));
+
                                         JSONObject menuTab = menuCategories.getJSONObject(i);
                                         List<String> tabsList = Lists.newArrayList(menuTab.keys());
                                         JSONArray tabItems = menuTab.getJSONArray(tabPageTitles.get(i));
-                                        for (int j = 0; j < tabItems.length(); j++) {
+
+                                        for (int j = 0; j < tabItems.length(); j++) {                   //single tab items array
 //                                            tabItems.getJSONObject(i).getString("id");
-                                            fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("id"), tabItems.getJSONObject(j).getString("item"), tabItems.getJSONObject(j).getString("desc"), tabItems.getJSONObject(j).getString("price"), tabItems.getJSONObject(j).getString("picture")));
+                                            if (tabSubCategory.contains(tabItems.getJSONObject(j).getString("sub_category"))) {
+                                                fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("id"), tabItems.getJSONObject(j).getString("item"), tabItems.getJSONObject(j).getString("desc"), tabItems.getJSONObject(j).getString("price"), tabItems.getJSONObject(j).getString("picture")));
+                                            } else {
+                                                fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("sub_category"), true));
+                                                fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("id"), tabItems.getJSONObject(j).getString("item"), tabItems.getJSONObject(j).getString("desc"), tabItems.getJSONObject(j).getString("price"), tabItems.getJSONObject(j).getString("picture")));
+                                            }
+
 //                                            fragOneAdapter = new ResFragOneAdapter(RestaurantActivity.this, fragOneItems);
                                         }
                                         allMenu.add(fragOneItems);
@@ -352,7 +407,8 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 params.put("api_secret", apiSecretKey);
 //                params.put("restaurant_id", restaurantID);
                 params.put("restaurant_id", "1");
-                params.put("restaurant_id", restaurantID);
+                params.put("restaurant_id", "1");
+//                params.put("restaurant_id", restaurantID);
                 params.put("branch_id", "1");
                 return params;
             }
@@ -451,6 +507,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
     }
 
     private void initUI() {
+        swipe_refresh_layout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         tvBasketItemsQuantity = (TextView) findViewById(R.id.tvBasketItemsQuantity);
         tvRestaurantName = (TextView) findViewById(R.id.tvRestaurantName);
         tvRestaurantName.setText(restaurantTitle);
@@ -507,6 +564,13 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 }
             }
 
+        });
+
+        swipe_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipe_refresh_layout.setRefreshing(false);
+            }
         });
 
         resetViewCartButton();

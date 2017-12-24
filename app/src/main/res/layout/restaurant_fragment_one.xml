@@ -6,6 +6,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/tvDash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvToTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:00"
+        app:layout_constraintLeft_toRightOf="@+id/tvDash"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        />
+    <TextView
+        android:id="@+id/tvFromTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="08:00"
+        app:layout_constraintRight_toLeftOf="@+id/tvDash"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        />
+
     <com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView
         android:id="@+id/recycler_view1"
         android:layout_width="0dp"
@@ -15,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvToTime"
         app:layout_constraintVertical_bias="0.0"
         android:nestedScrollingEnabled="false"
         android:descendantFocusability="blocksDescendants"

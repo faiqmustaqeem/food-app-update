@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.codiansoft.foodapp.FoodActivity;
 import com.codiansoft.foodapp.R;
@@ -27,6 +28,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import java.util.ArrayList;
 
 import static com.codiansoft.foodapp.RestaurantActivity.allMenu;
+import static com.codiansoft.foodapp.RestaurantActivity.tabTimes;
 import static com.codiansoft.foodapp.RestaurantActivity.viewPager;
 
 /**
@@ -43,6 +45,8 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
     public static ResFragOneAdapter fragOneAdapter;
     public static RecyclerView.LayoutManager fragOneLayoutManager;
 
+    TextView tvFromTime, tvToTime;
+
     FloatingActionButton fabScrollNavigation;
 
     @Nullable
@@ -51,6 +55,8 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
         View rootView = null;
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.restaurant_fragment_one, container, false);
+            tvFromTime = (TextView) rootView.findViewById(R.id.tvFromTime);
+            tvToTime = (TextView) rootView.findViewById(R.id.tvToTime);
             recycler_view1 = (ObservableRecyclerView) rootView.findViewById(R.id.recycler_view1);
             fabScrollNavigation = (FloatingActionButton) rootView.findViewById(R.id.fabScrollNavigation);
 
@@ -61,6 +67,12 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                     return false;
                 }
             };
+
+            tvFromTime.setText(tabTimes.get(viewPager.getCurrentItem()).getFromTime());
+            tvToTime.setText(tabTimes.get(viewPager.getCurrentItem()).getToTime());
+
+
+
             recycler_view1.setLayoutManager(fragOneLayoutManager);
             recycler_view1.setItemAnimator(new DefaultItemAnimator());
 
@@ -74,11 +86,13 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                 @Override
                 public void onItemClick(View view, int position) {
                     Intent i = new Intent(getActivity(), FoodActivity.class);
-                    i.putExtra("foodID", fragOneItems.get(position).getID());
-                    i.putExtra("foodTitle", fragOneItems.get(position).getTitle());
-                    i.putExtra("foodDescription", fragOneItems.get(position).getDescription());
-                    i.putExtra("foodPrice", fragOneItems.get(position).getPrice());
-                    i.putExtra("foodImage", fragOneItems.get(position).getImageURL());
+                    if (allMenu.get(viewPager.getCurrentItem()).get(position).isRow()) {
+                        i.putExtra("foodID", allMenu.get(viewPager.getCurrentItem()).get(position).getID());
+                        i.putExtra("foodTitle", allMenu.get(viewPager.getCurrentItem()).get(position).getTitle());
+                        i.putExtra("foodDescription", allMenu.get(viewPager.getCurrentItem()).get(position).getDescription());
+                        i.putExtra("foodPrice", allMenu.get(viewPager.getCurrentItem()).get(position).getPrice());
+                        i.putExtra("foodImage", allMenu.get(viewPager.getCurrentItem()).get(position).getImageURL());
+                    }
                     startActivity(i);
                 }
             }));
