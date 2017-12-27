@@ -29,8 +29,6 @@ import java.util.ArrayList;
 
 import static com.codiansoft.foodapp.RestaurantActivity.allMenu;
 import static com.codiansoft.foodapp.RestaurantActivity.tabTimes;
-import static com.codiansoft.foodapp.RestaurantActivity.tvFromTimeMain;
-import static com.codiansoft.foodapp.RestaurantActivity.tvToTimeMain;
 import static com.codiansoft.foodapp.RestaurantActivity.viewPager;
 
 /**
@@ -41,7 +39,7 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
 
     public static int fragmentPosition;
 
-    ObservableRecyclerView recycler_view1;
+    public static ObservableRecyclerView recycler_view1;
     public static ProgressBar progressBar;
     public static ArrayList<FragmentOneDataModel> fragOneItems;
     public static ResFragOneAdapter fragOneAdapter;
@@ -51,7 +49,7 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
 
     FloatingActionButton fabScrollNavigation;
 
-    int position;
+    public static int position;
 
     @Nullable
     @Override
@@ -71,7 +69,6 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                     return false;
                 }
             };
-
 
             recycler_view1.setLayoutManager(fragOneLayoutManager);
             recycler_view1.setItemAnimator(new DefaultItemAnimator());
@@ -125,6 +122,7 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                                     if (item.getTitle().toString().equals(fragOneItems.get(i).getSectionTitle())) {
                                         fragOneLayoutManager.scrollToPosition(i);
                                         recycler_view1.scrollVerticallyToPosition(i);
+                                        recycler_view1.smoothScrollToPosition(position);
 
 //                                        float y = recycler_view1.getChildAt(i).getY();
 //                                        scrollView.smoothScrollTo(0, (int) y);

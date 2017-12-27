@@ -3,13 +3,14 @@ package com.codiansoft.foodapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
@@ -45,6 +46,7 @@ import com.codiansoft.foodapp.model.TabTimesModel;
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.google.common.collect.Lists;
 import com.nineoldandroids.view.ViewHelper;
 
 import org.json.JSONArray;
@@ -54,16 +56,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.fragOneAdapter;
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.fragOneItems;
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.fragOneLayoutManager;
+import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.position;
+import static com.codiansoft.foodapp.fragment.RestaurantFragmentOne.recycler_view1;
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentTwo.fragTwoAdapter;
 import static com.codiansoft.foodapp.fragment.RestaurantFragmentTwo.fragTwoItems;
-import static com.codiansoft.foodapp.fragment.RestaurantFragmentTwo.fragTwoLayoutManager;
-
-import com.google.common.collect.Lists;
 
 public class RestaurantActivity extends AppCompatActivity implements ObservableScrollViewCallbacks, View.OnClickListener {
     public static List<List<FragmentOneDataModel>> allMenu;
@@ -146,13 +146,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items));
 
 
-
-
-
-
-
-
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -170,15 +163,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
 
             }
         });
-
-
-
-
-
-
-
-
-
 
 
         viewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -243,17 +227,38 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                     }
                 }
 
-                Toast.makeText(RestaurantActivity.this, "" + viewPager.getCurrentItem(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(RestaurantActivity.this, "" + viewPager.getCurrentItem(), Toast.LENGTH_SHORT).show();
 
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        for (int i = 0; i < fragOneItems.size(); i++) {
-                            if (item.getTitle().equals(fragOneItems.get(i).getSectionTitle())) {
-                                fragOneLayoutManager.scrollToPosition(i);
-                                break;
+
+
+                        for (int j = 0; j < allMenu.get(position).size(); j++) {
+                            if (!allMenu.get(position).get(j).isRow()) {
+                                if (item.getTitle().toString().equals(allMenu.get(position).get(j).getSectionTitle())) {
+                                        fragOneLayoutManager.scrollToPosition(j);
+                                        recycler_view1.scrollVerticallyToPosition(j);
+                                        recycler_view1.smoothScrollToPosition(j);
+
+//                                        float y = recycler_view1.getChildAt(i).getY();
+//                                        scrollView.smoothScrollTo(0, (int) y);
+
+                                    /*final int finalJ = j;
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            recycler_view1.smoothScrollToPosition(finalJ);
+                                            fragOneLayoutManager.scrollToPosition(finalJ);
+                                            recycler_view1.scrollVerticallyToPosition(finalJ);
+                                        }
+                                    }, 200);*/
+
+                                    break;
+                                }
                             }
                         }
+
 
 
 
@@ -336,7 +341,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         });
 
 
-
     }
 
     private void fetchRestaurantMenu() {
@@ -369,9 +373,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
 
                                         //tab timings
                                         tabTimes.add(new TabTimesModel(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getString("to_time"), result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getString("from_time")));
-
-
-
 
 
                                         tabSubCategory.clear();
@@ -446,10 +447,12 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 String apiSecretKey = settings.getString("apiSecretKey", "defaultValue");
 
                 params.put("api_secret", apiSecretKey);
-//                params.put("restaurant_id", restaurantID);
+
+
                 params.put("restaurant_id", "1");
-                params.put("restaurant_id", "1");
 //                params.put("restaurant_id", restaurantID);
+
+
                 params.put("branch_id", "1");
                 return params;
             }
@@ -617,7 +620,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         });
 
         resetViewCartButton();
-
 
 
     }
