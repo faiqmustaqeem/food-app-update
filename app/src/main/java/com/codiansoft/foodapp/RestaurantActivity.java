@@ -82,6 +82,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
     ArrayList<String> tabPageTitles = new ArrayList<>();
     ArrayList<String> tabSubCategory = new ArrayList<>();
     int tabsQty = 3;
+    public static TextView tvFromTimeMain, tvToTimeMain;
 
     String restaurantID, restaurantTitle, restaurantDescription, restaurantDuration, restaurantImage, branch, lat, lng;
 
@@ -143,6 +144,41 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
             items.add("Item " + i);
         }
         listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items));
+
+
+
+
+
+
+
+
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tvFromTimeMain.setText(tabTimes.get(position).getFromTime());
+                tvToTimeMain.setText(tabTimes.get(position).getToTime());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
 
 
         viewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -298,6 +334,9 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 finish();
             }
         });
+
+
+
     }
 
     private void fetchRestaurantMenu() {
@@ -369,6 +408,8 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                 viewPager.setOffscreenPageLimit(2);
                                 viewPager.clearFocus();
                                 tabLayout.setupWithViewPager(viewPager);
+                                tvFromTimeMain.setText(tabTimes.get(0).getFromTime());
+                                tvToTimeMain.setText(tabTimes.get(0).getToTime());
                             }
 
                         } catch (Exception ee) {
@@ -507,6 +548,8 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
     }
 
     private void initUI() {
+        tvToTimeMain = (TextView) findViewById(R.id.tvToTime);
+        tvFromTimeMain = (TextView) findViewById(R.id.tvFromTime);
         swipe_refresh_layout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         tvBasketItemsQuantity = (TextView) findViewById(R.id.tvBasketItemsQuantity);
         tvRestaurantName = (TextView) findViewById(R.id.tvRestaurantName);
@@ -574,6 +617,9 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         });
 
         resetViewCartButton();
+
+
+
     }
 
     private void resetViewCartButton() {

@@ -29,6 +29,8 @@ import java.util.ArrayList;
 
 import static com.codiansoft.foodapp.RestaurantActivity.allMenu;
 import static com.codiansoft.foodapp.RestaurantActivity.tabTimes;
+import static com.codiansoft.foodapp.RestaurantActivity.tvFromTimeMain;
+import static com.codiansoft.foodapp.RestaurantActivity.tvToTimeMain;
 import static com.codiansoft.foodapp.RestaurantActivity.viewPager;
 
 /**
@@ -48,6 +50,8 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
     TextView tvFromTime, tvToTime;
 
     FloatingActionButton fabScrollNavigation;
+
+    int position;
 
     @Nullable
     @Override
@@ -69,17 +73,14 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
             };
 
 
-
-
             recycler_view1.setLayoutManager(fragOneLayoutManager);
             recycler_view1.setItemAnimator(new DefaultItemAnimator());
 
 //            fragmentPosition = viewPager.getCurrentItem();
-            int position = this.getArguments().getInt("position");
+            position = this.getArguments().getInt("position");
 
             tvFromTime.setText(tabTimes.get(position).getFromTime());
             tvToTime.setText(tabTimes.get(position).getToTime());
-
 
 
             fragOneAdapter = new ResFragOneAdapter(getActivity(), new ArrayList<FragmentOneDataModel>(allMenu.get(position)));
@@ -120,9 +121,15 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                         public boolean onMenuItemClick(MenuItem item) {
 
                             for (int i = 0; i < fragOneItems.size(); i++) {
-                                if (item.getTitle().equals(fragOneItems.get(i).getSectionTitle())) {
-                                    fragOneLayoutManager.scrollToPosition(i);
-                                    break;
+                                if (!fragOneItems.get(i).isRow()) {
+                                    if (item.getTitle().toString().equals(fragOneItems.get(i).getSectionTitle())) {
+                                        fragOneLayoutManager.scrollToPosition(i);
+                                        recycler_view1.scrollVerticallyToPosition(i);
+
+//                                        float y = recycler_view1.getChildAt(i).getY();
+//                                        scrollView.smoothScrollTo(0, (int) y);
+                                        break;
+                                    }
                                 }
                             }
 

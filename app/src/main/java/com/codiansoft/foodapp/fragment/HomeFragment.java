@@ -446,7 +446,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         } catch (Exception ee) {
-                            Toast.makeText(getActivity(), ""+ ee.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "" + ee.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
