@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,7 +122,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 if (newRestaurantsArray.length() > 0) {
                                     for (int i = 0; i < newRestaurantsArray.length(); i++) {
                                         JSONObject resObj = newRestaurantsArray.getJSONObject(i);
-                                        newRestaurantsModel = new RestaurantsModel(resObj.getString("id"), resObj.getString("name"), resObj.getString("logo"), "20-30 MIN", resObj.getString("desc"));
+                                        newRestaurantsModel = new RestaurantsModel(resObj.getString("id"), resObj.getString("name"), resObj.getString("logo"), resObj.getString("timing"), resObj.getString("desc"),resObj.getString("branch_id"));
                                         newRestaurantsList.add(newRestaurantsModel);
                                     }
                                 }
@@ -133,7 +134,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 if (popularRestaurantsArray.length() > 0) {
                                     for (int i = 0; i < popularRestaurantsArray.length(); i++) {
                                         JSONObject resObj = popularRestaurantsArray.getJSONObject(i);
-                                        popularRestaurantsModel = new RestaurantsModel(resObj.getString("id"), resObj.getString("name"), resObj.getString("logo"), "20-30 MIN", resObj.getString("desc"));
+                                        popularRestaurantsModel = new RestaurantsModel(resObj.getString("id"), resObj.getString("name"), resObj.getString("logo"), resObj.getString("timing"), resObj.getString("desc"),resObj.getString("branch_id"));
                                         popularRestaurantsList.add(newRestaurantsModel);
                                     }
                                 }
@@ -145,7 +146,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 if (featuredRestaurantsArray.length() > 0) {
                                     for (int i = 0; i < featuredRestaurantsArray.length(); i++) {
                                         JSONObject resObj = featuredRestaurantsArray.getJSONObject(i);
-                                        featuredRestaurantsModel = new RestaurantsModel(resObj.getString("id"), resObj.getString("name"), resObj.getString("logo"), "20-30 MIN", resObj.getString("desc"));
+                                        featuredRestaurantsModel = new RestaurantsModel(resObj.getString("id"), resObj.getString("name"), resObj.getString("logo"), "20-30 MIN", resObj.getString("desc"),resObj.getString("branch_id"));
                                         featuredRestaurantsList.add(newRestaurantsModel);
                                     }
                                 }
@@ -168,7 +169,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         } catch (Exception ee) {
-
+                                Log.e("error",ee.getMessage());
                         }
                     }
                 },
@@ -273,21 +274,21 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 
                                         restaurantslist = new ArrayList<>();
-                                        restaurantsModel = new RestaurantsModel("", "", "", "", "");
+                                        restaurantsModel = new RestaurantsModel("", "", "", "", "","");
                                         restaurantslist.add(restaurantsModel);
 
                                         fetchRestaurantsFromServer();
                                         fetchAllSlidersRestaurants();
 
-                                        restaurantsModel = new RestaurantsModel("1", "McDonald's", "https://cdn-jpg1.thedailymeal.com/sites/default/files/styles/tdm_slideshow_large/public/images/Mcdonalds_logo96.jpg?itok=Mw_7SQGy", "20-30 MIN", "Fast Food");
+                                        restaurantsModel = new RestaurantsModel("1", "McDonald's", "https://cdn-jpg1.thedailymeal.com/sites/default/files/styles/tdm_slideshow_large/public/images/Mcdonalds_logo96.jpg?itok=Mw_7SQGy", "20-30 MIN", "Fast Food","1");
                                         restaurantslist.add(restaurantsModel);
-                                        restaurantsModel = new RestaurantsModel("2", "KFC PAK", "https://www.onlyitaewon.com/wp-content/uploads/2016/08/KFC-Itaewon-2.jpg", "10-15 MIN", "Fast Food");
+                                        restaurantsModel = new RestaurantsModel("2", "KFC PAK", "https://www.onlyitaewon.com/wp-content/uploads/2016/08/KFC-Itaewon-2.jpg", "10-15 MIN", "Fast Food","1");
                                         restaurantslist.add(restaurantsModel);
-                                        restaurantsModel = new RestaurantsModel("3", "Burger King", "https://www.welivesecurity.com/wp-content/uploads/2016/05/descuento-burger-king-623x432.jpg", "40-50 MIN", "Fast Food");
+                                        restaurantsModel = new RestaurantsModel("3", "Burger King", "https://www.welivesecurity.com/wp-content/uploads/2016/05/descuento-burger-king-623x432.jpg", "40-50 MIN", "Fast Food","1");
                                         restaurantslist.add(restaurantsModel);
-                                        restaurantsModel = new RestaurantsModel("4", "Pizza Hut", "http://members.wisdells.com/member-media/rest/PizzaHut.jpg", "20-30 MIN", "Fast Food");
+                                        restaurantsModel = new RestaurantsModel("4", "Pizza Hut", "http://members.wisdells.com/member-media/rest/PizzaHut.jpg", "20-30 MIN", "Fast Food","1");
                                         restaurantslist.add(restaurantsModel);
-                                        restaurantsModel = new RestaurantsModel("5", "Sub Way", "https://onefatfrog23.files.wordpress.com/2013/08/subway01_full.jpg", "30-40 MIN", "Fast Food");
+                                        restaurantsModel = new RestaurantsModel("5", "Sub Way", "https://onefatfrog23.files.wordpress.com/2013/08/subway01_full.jpg", "30-40 MIN", "Fast Food","1");
                                         restaurantslist.add(restaurantsModel);
 
 
@@ -321,16 +322,16 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 */
 //        fetchMostPopularRestaurants();
 
-        underThirtyRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "http://www.kfcyumcenter.com/assets/img/MillerLiteLounge.jpg", "20-30 MIN", "1");
+        underThirtyRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "http://www.kfcyumcenter.com/assets/img/MillerLiteLounge.jpg", "20-30 MIN", "1","1");
         underThirtyRestaurantsList.add(underThirtyRestaurantsModel);
-        underThirtyRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "http://www.foodcenter.nl/db/WAS45cc54f66d464/poort2.jpg", "20-30 MIN", "1");
+        underThirtyRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "http://www.foodcenter.nl/db/WAS45cc54f66d464/poort2.jpg", "20-30 MIN", "1","1");
         underThirtyRestaurantsList.add(underThirtyRestaurantsModel);
         underThirtyPager.setAdapter(new RestaurantsSliderAdapter(getActivity(), underThirtyRestaurantsList));
         underThirtyIndicator.setViewPager(underThirtyPager);
 
-        friendsFavRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "https://whyhunger.org/media/k2/galleries/2321/141207_Austin_SustainableFoodCenter0156.jpg", "20-30 MIN", "1");
+        friendsFavRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "https://whyhunger.org/media/k2/galleries/2321/141207_Austin_SustainableFoodCenter0156.jpg", "20-30 MIN", "1","1");
         friendsFavRestaurantsList.add(friendsFavRestaurantsModel);
-        friendsFavRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "http://www.raytheon.com/news/rtnwcm/groups/gallery/documents/image/wildernesswarriors3_body_img01.jpg", "20-30 MIN", "1");
+        friendsFavRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "http://www.raytheon.com/news/rtnwcm/groups/gallery/documents/image/wildernesswarriors3_body_img01.jpg", "20-30 MIN", "1","1");
         friendsFavRestaurantsList.add(friendsFavRestaurantsModel);
         friendsFavPager.setAdapter(new RestaurantsSliderAdapter(getActivity(), friendsFavRestaurantsList));
         friendsFavIndicator.setViewPager(friendsFavPager);
@@ -353,9 +354,9 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             if (result.getString("status").equals("success")) {
                                 JSONArray restaurantsArray = result.getJSONArray("response");
 
-                                popularRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "https://media-cdn.tripadvisor.com/media/photo-s/01/c0/e4/bf/food-court.jpg", "20-30 MIN", "1");
+                                popularRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "https://media-cdn.tripadvisor.com/media/photo-s/01/c0/e4/bf/food-court.jpg", "20-30 MIN", "1","1");
                                 popularRestaurantsList.add(popularRestaurantsModel);
-                                popularRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "https://images4.persgroep.net/rcs/xFvDCbC8UCs-Gu8GLd1I8IBN2Lg/diocontent/108025095/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.9", "20-30 MIN", "1");
+                                popularRestaurantsModel = new RestaurantsModel("1", "Restaurant-1", "https://images4.persgroep.net/rcs/xFvDCbC8UCs-Gu8GLd1I8IBN2Lg/diocontent/108025095/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.9", "20-30 MIN", "1","1");
                                 popularRestaurantsList.add(popularRestaurantsModel);
                                 popularPager.setAdapter(new RestaurantsSliderAdapter(getActivity(), popularRestaurantsList));
                                 popularIndicator.setViewPager(popularPager);
@@ -436,7 +437,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     for (int i = 0; i < restaurantsArray.length(); i++) {
                                         JSONObject Data = restaurantsArray.getJSONObject(i);
                                         float distanceInMeters = calculateDistance(new LatLng(myLat, myLng), new LatLng(Double.parseDouble(Data.getString("lat")), Double.parseDouble(Data.getString("lng"))));
-                                        restaurantsModel = new RestaurantsModel(Data.getString("id"), Data.getString("name"), Data.getString("logo"), distanceInMeters + "M away", Data.getString("desc"));
+                                        restaurantsModel = new RestaurantsModel(Data.getString("id"), Data.getString("name"), Data.getString("logo"), distanceInMeters + "M away", Data.getString("desc"),Data.getString("branch_id"));
                                         restaurantslist.add(restaurantsModel);
                                     }
                                 }

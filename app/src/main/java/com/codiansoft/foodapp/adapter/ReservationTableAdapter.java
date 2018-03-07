@@ -50,7 +50,7 @@ public class ReservationTableAdapter extends RecyclerView.Adapter<ReservationTab
     public void onBindViewHolder(MyViewHolder holder, int position) {
         ReservationTableModel reservationTableModel = tablesList.get(position);
         holder.title.setText(reservationTableModel.getTitle());
-        holder.tvCapacity.setText("Capacity: " + reservationTableModel.getCapacity());
+       // holder.tvCapacity.setText("Capacity: " + reservationTableModel.getCapacity());
     }
 
     @Override

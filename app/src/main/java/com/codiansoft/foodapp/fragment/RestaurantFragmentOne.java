@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.codiansoft.foodapp.FoodActivity;
+import com.codiansoft.foodapp.GlobalClass;
 import com.codiansoft.foodapp.R;
 import com.codiansoft.foodapp.RecyclerItemClickListener;
 import com.codiansoft.foodapp.adapter.ResFragOneAdapter;
@@ -94,7 +96,14 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                         i.putExtra("foodDescription", allMenu.get(viewPager.getCurrentItem()).get(position).getDescription());
                         i.putExtra("foodPrice", allMenu.get(viewPager.getCurrentItem()).get(position).getPrice());
                         i.putExtra("foodImage", allMenu.get(viewPager.getCurrentItem()).get(position).getImageURL());
+
+                        GlobalClass.selectedRestaurantID=allMenu.get(viewPager.getCurrentItem()).get(position).getRestaurant_id();
+                        GlobalClass.selectedRestaurantBranchID=allMenu.get(viewPager.getCurrentItem()).get(position).getBranch_id();
+                        GlobalClass.selectedRestaurantItemId=allMenu.get(viewPager.getCurrentItem()).get(position).getID();
+                        GlobalClass.variation=allMenu.get(viewPager.getCurrentItem()).get(position).getVariation();
+
                     }
+
                     startActivity(i);
                 }
             }));
@@ -116,13 +125,19 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                     //registering popup with OnMenuItemClickListener
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
-
+                            Log.e("checknew0","0");
                             for (int i = 0; i < fragOneItems.size(); i++) {
                                 if (!fragOneItems.get(i).isRow()) {
-                                    if (item.getTitle().toString().equals(fragOneItems.get(i).getSectionTitle())) {
+
+                                    if (item.getTitle().toString().toLowerCase().equals(fragOneItems.get(i).getSectionTitle().toLowerCase())) {
+
+                                        Log.e("checknew1",item.getTitle().toString().toLowerCase());
+                                        Log.e("checknew2",item.getTitle().toString().toLowerCase());
+
                                         fragOneLayoutManager.scrollToPosition(i);
-                                        recycler_view1.scrollVerticallyToPosition(i);
-                                        recycler_view1.smoothScrollToPosition(position);
+                                       // recycler_view1.scrollToPosition(i);
+                                       // recycler_view1.scrollVerticallyToPosition(i);
+                                       // recycler_view1.smoothScrollToPosition(position);
 
 //                                        float y = recycler_view1.getChildAt(i).getY();
 //                                        scrollView.smoothScrollTo(0, (int) y);

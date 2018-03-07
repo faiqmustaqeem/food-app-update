@@ -110,7 +110,7 @@ public class ServiceRestaurantsFragment extends Fragment implements SwipeRefresh
                                         swipeRefreshLayout.setRefreshing(true);
 
                                         restaurantslist = new ArrayList<>();
-                                        restaurantsModel = new RestaurantsModel("", "", "", "", "");
+                                        restaurantsModel = new RestaurantsModel("", "", "", "", "","");
                                         restaurantslist.add(restaurantsModel);
 
                                         fetchRestaurantsFromServer();
@@ -151,7 +151,7 @@ public class ServiceRestaurantsFragment extends Fragment implements SwipeRefresh
                                 if (restaurants.length() > 0) {
                                     for (int i = 0; i < restaurants.length(); i++) {
                                         JSONObject Data = restaurants.getJSONObject(i);
-                                        restaurantsModel = new RestaurantsModel(Data.getString("restaurant_id"), Data.getString("name"), Data.getString("logo"), "20-30 MIN", Data.getString("desc"));
+                                        restaurantsModel = new RestaurantsModel(Data.getString("restaurant_id"), Data.getString("name"), Data.getString("logo"), Data.getString("timing"), Data.getString("desc"),Data.getString("branch_id"));
                                         restaurantslist.add(restaurantsModel);
                                     }
                                     adapter = new RestaurantsRVAdapter(getActivity(), restaurantslist);

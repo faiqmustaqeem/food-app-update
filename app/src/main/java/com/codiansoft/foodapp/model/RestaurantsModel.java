@@ -10,6 +10,7 @@ public class RestaurantsModel {
     String pic;
     String duration;
     String type;
+    private String branchId;
 
     public String getId() {
         return id;
@@ -49,12 +50,20 @@ public class RestaurantsModel {
         this.type = type;
     }
 
-    public RestaurantsModel(String id, String name, String pic, String duration, String type) {
+    public RestaurantsModel(String id, String name, String pic, String duration, String type ,String branchId) {
         this.id = id;
         this.name = name;
         this.pic = pic;
         this.duration = duration;
         this.type = type;
+        this.branchId=branchId;
+    }
 
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
     }
 }

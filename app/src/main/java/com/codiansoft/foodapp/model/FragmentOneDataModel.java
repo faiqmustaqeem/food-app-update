@@ -10,16 +10,23 @@ public class FragmentOneDataModel {
     boolean isRequired;
     boolean isRow;
 
+    private String restaurant_id;
+    private String branch_id;
+    private String variation;
+
     public FragmentOneDataModel() {
     }
 
-    public FragmentOneDataModel(String id, String title, String description, String price, String image) {
+    public FragmentOneDataModel(String id, String title, String description, String price, String image, String restaurant_id,String branch_id,String variation) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.price = price;
         this.image = image;
         this.isRow = true;
+        this.setRestaurant_id(restaurant_id);
+        this.setBranch_id(branch_id);
+        this.setVariation(variation);
     }
     public FragmentOneDataModel(String sectionTitle, boolean isRequired) {
         this.sectionTitle = sectionTitle;
@@ -51,5 +58,29 @@ public class FragmentOneDataModel {
 
     public String getSectionTitle() {
         return sectionTitle;
+    }
+
+    public String getRestaurant_id() {
+        return restaurant_id;
+    }
+
+    public void setRestaurant_id(String restaurant_id) {
+        this.restaurant_id = restaurant_id;
+    }
+
+    public String getBranch_id() {
+        return branch_id;
+    }
+
+    public void setBranch_id(String branch_id) {
+        this.branch_id = branch_id;
+    }
+
+    public String getVariation() {
+        return variation;
+    }
+
+    public void setVariation(String variation) {
+        this.variation = variation;
     }
 }

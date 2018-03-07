@@ -2,16 +2,39 @@ package com.codiansoft.foodapp.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.codiansoft.foodapp.AccountActivity;
+import com.codiansoft.foodapp.GlobalClass;
 import com.codiansoft.foodapp.R;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -22,7 +45,8 @@ public class ProfileEditPermissionDialog extends Dialog implements android.view.
     public Activity c;
     EditText etPassword;
     TextView tvSubmit, tvCancel;
-
+  public static String passowrd="";
+    public static boolean isPassswordSet=false;
     public ProfileEditPermissionDialog(Activity a) {
         super(a);
         // TODO Auto-generated constructor stub
@@ -70,7 +94,8 @@ public class ProfileEditPermissionDialog extends Dialog implements android.view.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvSubmit:
-                AccountActivity.canEdit = true;
+                passowrd=etPassword.getText().toString();
+                isPassswordSet=true;
                 break;
             case R.id.tvCancel:
                 dismiss();
@@ -81,4 +106,6 @@ public class ProfileEditPermissionDialog extends Dialog implements android.view.
         }
         dismiss();
     }
+
+
 }

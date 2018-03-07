@@ -1,5 +1,7 @@
 package com.codiansoft.foodapp.model;
 
+import java.util.List;
+
 /**
  * Created by Codiansoft on 8/28/2017.
  */

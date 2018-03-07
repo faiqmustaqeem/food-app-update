@@ -151,6 +151,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                                 editor.putString("userID", userdata.getString("id"));
                                 editor.commit();
 
+                                GlobalClass.api_secret=data.getString("api_secret");
+
                                 progressDialog.dismiss();
                                 Intent restaurantsIntent = new Intent(LogInActivity.this, MainActivity.class);
                                 startActivity(restaurantsIntent);

@@ -2,6 +2,7 @@ package com.codiansoft.foodapp.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +32,33 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<String> selectedTexts = new ArrayList<String>();
 
     public class MyViewHolderSingle extends RecyclerView.ViewHolder {
-        public RadioButton rbSingleChoice;
+        RadioButton rbSingleChoice;
+        TextView tvPrice, tvCurrencyCode;
+
 
         public MyViewHolderSingle(View view) {
             super(view);
             rbSingleChoice = (RadioButton) view.findViewById(R.id.rbSingleChoice);
+            tvPrice=view.findViewById(R.id.tvPrice);
+            tvCurrencyCode =  view.findViewById(R.id.tvCurrencyCode);
         }
     }
+
+    // variation start
+
+    public class MyViewHolderVariation extends RecyclerView.ViewHolder {
+        RadioButton rbSingleChoice;
+        TextView tvPrice, tvCurrencyCode;
+
+
+        public MyViewHolderVariation(View view) {
+            super(view);
+            rbSingleChoice =  view.findViewById(R.id.rbSingleChoice);
+            tvPrice=view.findViewById(R.id.tvPrice);
+            tvCurrencyCode =  view.findViewById(R.id.tvCurrencyCode);
+        }
+    }
+    // vriation end
 
     public class MyViewHolderMultiple extends RecyclerView.ViewHolder {
         CheckBox cbMultipleChoice;
@@ -84,7 +105,14 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.food_choice_item_multiple, parent, false);
             return new MyViewHolderMultiple(itemView);
-        } else {
+        }else if(viewType==2)
+        {
+            View itemView=LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.variation_item_single,parent,false);
+            return new MyViewHolderVariation(itemView);
+        }
+
+        else {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.food_choice_section_item, parent, false);
             return new FoodAdapter.SectionViewHolder(itemView);
@@ -96,12 +124,13 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final FoodModel foodChoicesModel = foodChoices.get(position);
 
         if (foodChoicesModel.isRow()) {
+
             if (foodChoicesModel.getSectionCategory().equals("single")) {
                 final MyViewHolderSingle h = (MyViewHolderSingle) holder;
-
+                Log.e("category",foodChoicesModel.getSectionCategory());
                 h.rbSingleChoice.setText(foodChoicesModel.getTitle());
                 h.rbSingleChoice.setChecked(foodChoicesModel.getSingleChoiceSelection());
-
+                h.tvPrice.setText(foodChoicesModel.getPrice());
 
                 h.rbSingleChoice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -127,7 +156,40 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
 
-            } else if (foodChoicesModel.getSectionCategory().equals("multiple")) {
+            }
+           else  if (foodChoicesModel.getSectionCategory().equals("variation")) {
+                final MyViewHolderVariation h = (MyViewHolderVariation) holder;
+                Log.e("category",foodChoicesModel.getSectionCategory());
+                h.rbSingleChoice.setText(foodChoicesModel.getTitle());
+                h.rbSingleChoice.setChecked(foodChoicesModel.getSingleChoiceVariation());
+                h.tvPrice.setText(foodChoicesModel.getPrice());
+
+                h.rbSingleChoice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b) {
+                            foodChoicesModel.setSingleChoiceVariation(true);
+                            for (int i = 0; i < foodChoices.size(); i++) {
+                                if (i == position) continue;
+                                else {
+                                    FoodModel foodChoicesModel = foodChoices.get(i);
+                                    foodChoicesModel.setSingleChoiceVariation(false);
+
+                                    selectedTexts.add(foodChoicesModel.getTitle() + "\n");
+
+                                    /*if (!selectedFoodChoicesString.contains(h.rbSingleChoice.getText().toString()))
+                                        selectedFoodChoicesString = selectedFoodChoicesString + h.rbSingleChoice.getText().toString() + "\n";*/
+                                }
+                            }
+                            notifyDataSetChanged();
+                        } else {
+                            selectedTexts.remove(foodChoicesModel.getTitle() + "\n");
+                        }
+                    }
+                });
+
+            }
+            else if (foodChoicesModel.getSectionCategory().equals("multiple")) {
                 final MyViewHolderMultiple h = (MyViewHolderMultiple) holder;
 
                 if (foodChoicesModel.getPrice().equals("0")) {
@@ -168,8 +230,10 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return 0;
         } else if (item.isRow() & item.getSectionCategory().equals("multiple")) {
             return 1;
-        } else {
+        } else if(item.isRow() & item.getSectionCategory().equals("variation")){
             return 2;
         }
+        else
+            return 3;
     }
 }

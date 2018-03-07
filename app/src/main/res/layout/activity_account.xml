@@ -105,6 +105,7 @@
                         android:id="@+id/ivProfilePic"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
+                        android:clickable="false"
                         android:src="@drawable/ic_profile_pic"
                         app:civ_border_color="#FF000000"
                         app:civ_border_width="2dp" />

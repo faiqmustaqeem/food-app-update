@@ -435,6 +435,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.ivSearch:
+
                 hideServicesAndFilterSlideDialogs();
                 ivMeals.setImageResource(R.drawable.ic_meals);
 
@@ -448,11 +449,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Fragment searchFragment = fm.findFragmentByTag(SearchFragment.TAG);
 
                 searchFragment = new SearchFragment();
+
                 fm.beginTransaction()
                         .replace(R.id.container, searchFragment, SearchFragment.TAG)
                         .commit();
 
                 tvHeader.setText("Search Restaurants");
+
                 break;
             case R.id.ivOptions:
                 hideServicesAndFilterSlideDialogs();

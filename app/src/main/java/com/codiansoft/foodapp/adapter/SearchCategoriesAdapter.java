@@ -1,6 +1,7 @@
 package com.codiansoft.foodapp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,8 @@ public class SearchCategoriesAdapter extends BaseAdapter implements Filterable {
 
 
     @Override
-    public Filter getFilter() {
+    public Filter getFilter()
+    {
         Filter filter = new Filter() {
 
             @SuppressWarnings("unchecked")
@@ -100,7 +102,7 @@ public class SearchCategoriesAdapter extends BaseAdapter implements Filterable {
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < searchCategoriesModelArrayList.size(); i++) {
                         String data = searchCategoriesModelArrayList.get(i).getTitle();
-                        if (data.toLowerCase().startsWith(constraint.toString())) {
+                        if (data.toLowerCase().contains(constraint.toString())) {
                             FilteredArrList.add(new SearchCategoriesModel(searchCategoriesModelArrayList.get(i).getID(), searchCategoriesModelArrayList.get(i).getImage(), searchCategoriesModelArrayList.get(i).getTitle()));
                         }
                     }
@@ -125,8 +127,9 @@ public class SearchCategoriesAdapter extends BaseAdapter implements Filterable {
         // TODO Auto-generated method stub
         Holder holder = new Holder();
         final View rowView;
-
+        Log.e("search","item "+position+"");
         rowView = inflater.inflate(R.layout.search_categories_item, null);
+
         holder.tvCategoryTitle = (TextView) rowView.findViewById(R.id.tvCategoryTitle);
         holder.ivCategoryImage = (ImageView) rowView.findViewById(R.id.ivCategoryImage);
 
@@ -135,7 +138,8 @@ public class SearchCategoriesAdapter extends BaseAdapter implements Filterable {
         holder.tvCategoryTitle.setText(searchCategoriesModel.getTitle());
         Glide.with(context).load(searchCategoriesModel.getImage()).into(holder.ivCategoryImage);
 
-        rowView.setOnClickListener(new View.OnClickListener() {
+        rowView.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -146,13 +150,15 @@ public class SearchCategoriesAdapter extends BaseAdapter implements Filterable {
                 Toast.makeText(context, ""+searchCategoriesModelArrayList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
                 searchedRestaurantslist = new ArrayList<>();
-                restaurantsModel = new RestaurantsModel("", "", "", "", "");
+                restaurantsModel = new RestaurantsModel("", "", "", "", "","");
                 searchedRestaurantslist.add(restaurantsModel);
 
-                fetchRestaurants();
+
+                fetchRestaurants(searchCategoriesModelArrayList.get(position).getID());
 
             }
         });
+
         return rowView;
     }
 }

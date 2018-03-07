@@ -80,6 +80,7 @@ public class FacebookFragment extends Fragment {
             showResult(title, alertMessage);
         }
 
+
         @Override
         public void onSuccess(Sharer.Result result) {
             Log.d("FacebookFragment", "Success!");

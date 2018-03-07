@@ -6,35 +6,32 @@ package com.codiansoft.foodapp.model;
 
 public class ReservationTableModel {
     private String ID;
-    private String title;
-    private String capacity;
-    private String price;
-    private String type;
-    private String imageUrl;
-    private String description;
-    private String status;
+    private String number;
 
-    public ReservationTableModel(String ID, String title, String status, String capacity){
-        this.ID = ID;
-        this.title = title;
-        this.capacity = capacity;
-        this.price = price;
-        this.type = type;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.status = status;
+
+    public ReservationTableModel(String ID, String number){
+        this.setID(ID);
+        this.setNumber(number);
     }
 
     public String getID() {
         return ID;
     }
-    public String getTitle() {
-        return title;
+
+    public String getNumber() {
+        return number;
     }
-    public String getCapacity() {
-        return capacity;
+
+    public void setNumber(String number) {
+        this.number = number;
     }
-    public String getStatus() {
-        return status;
+
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+    public String getTitle()
+    {
+        return "Table - "+this.number;
     }
 }

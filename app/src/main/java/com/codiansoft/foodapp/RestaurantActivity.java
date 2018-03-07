@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,6 +76,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
+
     FloatingActionButton fabScrollNavigation;
     TextView tvViewCart, tvRestaurantName, tvRestaurantDescription, tvBasketItemsQuantity;
     LinearLayout llTopBar;
@@ -100,6 +102,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
+
             if (extras == null) {
                 restaurantID = null;
                 restaurantTitle = null;
@@ -236,11 +239,17 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
 
                         for (int j = 0; j < allMenu.get(position).size(); j++) {
                             if (!allMenu.get(position).get(j).isRow()) {
-                                if (item.getTitle().toString().equals(allMenu.get(position).get(j).getSectionTitle())) {
-                                        fragOneLayoutManager.scrollToPosition(j);
-                                        recycler_view1.scrollVerticallyToPosition(j);
-                                        recycler_view1.smoothScrollToPosition(j);
+                                Log.e("check0",item.getTitle().toString().toLowerCase());
+                                Log.e("check1",allMenu.get(position).get(j).getSectionTitle().toLowerCase());
 
+                                if (item.getTitle().toString().toLowerCase().equals(allMenu.get(position).get(j).getSectionTitle().toLowerCase())) {
+                                       Log.e("check2",j+"");
+                                        //fragOneLayoutManager.scrollToPosition(j);
+                                    //fragOneLayoutManager.scrollToPosition(j);
+                                 //   fragOneLayoutManager.scrollToPositionWithOffset(j,2);
+                                    //recycler_view1.scrollVerticallyToPosition(j);
+                                      //  recycler_view1.smoothScrollToPosition(j);
+                                          //  recycler_view1.scrollToPosition(j);
 //                                        float y = recycler_view1.getChildAt(i).getY();
 //                                        scrollView.smoothScrollTo(0, (int) y);
 
@@ -361,6 +370,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                 tabsQty = result.getJSONObject("restaurant_details").getJSONArray("category_names").length();
 
                                 for (int a = 0; a < tabsQty; a++) {
+
                                     tabPageTitles.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(a).getString("app_category"));
 
                                 }
@@ -393,10 +403,10 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                         for (int j = 0; j < tabItems.length(); j++) {                   //single tab items array
 //                                            tabItems.getJSONObject(i).getString("id");
                                             if (tabSubCategory.contains(tabItems.getJSONObject(j).getString("sub_category"))) {
-                                                fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("id"), tabItems.getJSONObject(j).getString("item"), tabItems.getJSONObject(j).getString("desc"), tabItems.getJSONObject(j).getString("price"), tabItems.getJSONObject(j).getString("picture")));
+                                                fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("id"), tabItems.getJSONObject(j).getString("item"), tabItems.getJSONObject(j).getString("desc"), tabItems.getJSONObject(j).getString("price"), tabItems.getJSONObject(j).getString("picture"), tabItems.getJSONObject(j).getString("restaurant_id"), tabItems.getJSONObject(j).getString("branch_id"), tabItems.getJSONObject(j).getString("variation")));
                                             } else {
                                                 fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("sub_category"), true));
-                                                fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("id"), tabItems.getJSONObject(j).getString("item"), tabItems.getJSONObject(j).getString("desc"), tabItems.getJSONObject(j).getString("price"), tabItems.getJSONObject(j).getString("picture")));
+                                                fragOneItems.add(new FragmentOneDataModel(tabItems.getJSONObject(j).getString("id"), tabItems.getJSONObject(j).getString("item"), tabItems.getJSONObject(j).getString("desc"), tabItems.getJSONObject(j).getString("price"), tabItems.getJSONObject(j).getString("picture"), tabItems.getJSONObject(j).getString("restaurant_id"), tabItems.getJSONObject(j).getString("branch_id"), tabItems.getJSONObject(j).getString("variation")));
                                             }
 
 //                                            fragOneAdapter = new ResFragOneAdapter(RestaurantActivity.this, fragOneItems);
@@ -438,14 +448,15 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                         }
                     }
                 }
-        ) {
+        )
+        {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences settings = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
                 String userID = settings.getString("userID", "defaultValue");
                 String apiSecretKey = settings.getString("apiSecretKey", "defaultValue");
-
+                GlobalClass.api_secret=apiSecretKey;
                 params.put("api_secret", apiSecretKey);
 
 
@@ -460,95 +471,96 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
         queue.add(postRequest);
     }
 
-    private void getFragTwoItems() {
-        fragTwoItems = new ArrayList<FragmentTwoDataModel>();
-        fragTwoAdapter = new ResFragTwoAdapter(this, fragTwoItems);
-
-        FragmentTwoDataModel item = new FragmentTwoDataModel("Our Popular", true);
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("12", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://img.minq.com/vb/d54aaa20//71606437fe4afcde58f46ff1c2ef82c209bdeaeb.jpg");
-        fragTwoItems.add(item);
-        item = new FragmentTwoDataModel("13", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://static.sfdict.com/sizedimage/sizedimage?width=300&height=300&url=http%3A%2F%2Fstatic.sfdict.com%2Fassets%2F7102-4024811-269.jpg");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("14", "Signature Crafted Crispy Chicken Meal", "Comes with medium beverage and 1 side choice", "8.99", "https://metrouk2.files.wordpress.com/2016/11/fast-food-1.gif");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("15", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://www.referenceforbusiness.com/photos/fast-food-v1-679.jpg");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("16", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://i.dailymail.co.uk/i/pix/2017/01/24/17/3C782A3700000578-4152656-image-a-22_1485280039808.jpg");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("17", "Double Beef n Cheese Burger", "Comes with medium beverage and 1 side choice", "8.99", "https://s-media-cache-ak0.pinimg.com/736x/07/02/41/0702414e760d9cbe7b17d3552b4a8b58--indian-fast-food-indian-snacks.jpg");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("Our Special Dishes", true);
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("18", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://static.sfdict.com/sizedimage/sizedimage?width=300&height=300&url=http%3A%2F%2Fstatic.sfdict.com%2Fassets%2F7102-4024811-269.jpg");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("19", "Signature Crafted Crispy Chicken Meal", "Comes with medium beverage and 1 side choice", "8.99", "https://metrouk2.files.wordpress.com/2016/11/fast-food-1.gif");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("20", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://www.referenceforbusiness.com/photos/fast-food-v1-679.jpg");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("21", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://i.dailymail.co.uk/i/pix/2017/01/24/17/3C782A3700000578-4152656-image-a-22_1485280039808.jpg");
-        fragTwoItems.add(item);
-
-        item = new FragmentTwoDataModel("22", "Double Beef n Cheese Burger", "Comes with medium beverage and 1 side choice", "8.99", "https://s-media-cache-ak0.pinimg.com/736x/07/02/41/0702414e760d9cbe7b17d3552b4a8b58--indian-fast-food-indian-snacks.jpg");
-        fragTwoItems.add(item);
-
-        fragTwoAdapter.notifyDataSetChanged();
-    }
-
-    private void getFragOneItems() {
-        fragOneItems = new ArrayList<FragmentOneDataModel>();
-        fragOneAdapter = new ResFragOneAdapter(this, fragOneItems);
-
-        FragmentOneDataModel item = new FragmentOneDataModel("Most Popular", true);
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("1", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://img.minq.com/vb/d54aaa20//71606437fe4afcde58f46ff1c2ef82c209bdeaeb.jpg");
-        fragOneItems.add(item);
-        item = new FragmentOneDataModel("2", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://static.sfdict.com/sizedimage/sizedimage?width=300&height=300&url=http%3A%2F%2Fstatic.sfdict.com%2Fassets%2F7102-4024811-269.jpg");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("3", "Signature Crafted Crispy Chicken Meal", "Comes with medium beverage and 1 side choice", "8.99", "https://metrouk2.files.wordpress.com/2016/11/fast-food-1.gif");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("4", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://www.referenceforbusiness.com/photos/fast-food-v1-679.jpg");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("5", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://i.dailymail.co.uk/i/pix/2017/01/24/17/3C782A3700000578-4152656-image-a-22_1485280039808.jpg");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("6", "Double Beef n Cheese Burger", "Comes with medium beverage and 1 side choice", "8.99", "https://s-media-cache-ak0.pinimg.com/736x/07/02/41/0702414e760d9cbe7b17d3552b4a8b58--indian-fast-food-indian-snacks.jpg");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("Special Dishes", true);
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("7", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://static.sfdict.com/sizedimage/sizedimage?width=300&height=300&url=http%3A%2F%2Fstatic.sfdict.com%2Fassets%2F7102-4024811-269.jpg");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("8", "Signature Crafted Crispy Chicken Meal", "Comes with medium beverage and 1 side choice", "8.99", "https://metrouk2.files.wordpress.com/2016/11/fast-food-1.gif");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("9", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://www.referenceforbusiness.com/photos/fast-food-v1-679.jpg");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("10", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://i.dailymail.co.uk/i/pix/2017/01/24/17/3C782A3700000578-4152656-image-a-22_1485280039808.jpg");
-        fragOneItems.add(item);
-
-        item = new FragmentOneDataModel("11", "Double Beef n Cheese Burger", "Comes with medium beverage and 1 side choice", "8.99", "https://s-media-cache-ak0.pinimg.com/736x/07/02/41/0702414e760d9cbe7b17d3552b4a8b58--indian-fast-food-indian-snacks.jpg");
-        fragOneItems.add(item);
-
-        fragOneAdapter.notifyDataSetChanged();
-    }
+//    private void getFragTwoItems() {
+//        fragTwoItems = new ArrayList<FragmentTwoDataModel>();
+//        fragTwoAdapter = new ResFragTwoAdapter(this, fragTwoItems);
+//
+//        FragmentTwoDataModel item = new FragmentTwoDataModel("Our Popular", true);
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("12", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://img.minq.com/vb/d54aaa20//71606437fe4afcde58f46ff1c2ef82c209bdeaeb.jpg");
+//        fragTwoItems.add(item);
+//        item = new FragmentTwoDataModel("13", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://static.sfdict.com/sizedimage/sizedimage?width=300&height=300&url=http%3A%2F%2Fstatic.sfdict.com%2Fassets%2F7102-4024811-269.jpg");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("14", "Signature Crafted Crispy Chicken Meal", "Comes with medium beverage and 1 side choice", "8.99", "https://metrouk2.files.wordpress.com/2016/11/fast-food-1.gif");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("15", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://www.referenceforbusiness.com/photos/fast-food-v1-679.jpg");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("16", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://i.dailymail.co.uk/i/pix/2017/01/24/17/3C782A3700000578-4152656-image-a-22_1485280039808.jpg");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("17", "Double Beef n Cheese Burger", "Comes with medium beverage and 1 side choice", "8.99", "https://s-media-cache-ak0.pinimg.com/736x/07/02/41/0702414e760d9cbe7b17d3552b4a8b58--indian-fast-food-indian-snacks.jpg");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("Our Special Dishes", true);
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("18", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://static.sfdict.com/sizedimage/sizedimage?width=300&height=300&url=http%3A%2F%2Fstatic.sfdict.com%2Fassets%2F7102-4024811-269.jpg");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("19", "Signature Crafted Crispy Chicken Meal", "Comes with medium beverage and 1 side choice", "8.99", "https://metrouk2.files.wordpress.com/2016/11/fast-food-1.gif");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("20", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://www.referenceforbusiness.com/photos/fast-food-v1-679.jpg");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("21", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://i.dailymail.co.uk/i/pix/2017/01/24/17/3C782A3700000578-4152656-image-a-22_1485280039808.jpg");
+//        fragTwoItems.add(item);
+//
+//        item = new FragmentTwoDataModel("22", "Double Beef n Cheese Burger", "Comes with medium beverage and 1 side choice", "8.99", "https://s-media-cache-ak0.pinimg.com/736x/07/02/41/0702414e760d9cbe7b17d3552b4a8b58--indian-fast-food-indian-snacks.jpg");
+//        fragTwoItems.add(item);
+//
+//        fragTwoAdapter.notifyDataSetChanged();
+//
+//    }
+//
+//    private void getFragOneItems() {
+//        fragOneItems = new ArrayList<FragmentOneDataModel>();
+//        fragOneAdapter = new ResFragOneAdapter(this, fragOneItems);
+//
+//        FragmentOneDataModel item = new FragmentOneDataModel("Most Popular", true);
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("1", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://img.minq.com/vb/d54aaa20//71606437fe4afcde58f46ff1c2ef82c209bdeaeb.jpg");
+//        fragOneItems.add(item);
+//        item = new FragmentOneDataModel("2", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://static.sfdict.com/sizedimage/sizedimage?width=300&height=300&url=http%3A%2F%2Fstatic.sfdict.com%2Fassets%2F7102-4024811-269.jpg");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("3", "Signature Crafted Crispy Chicken Meal", "Comes with medium beverage and 1 side choice", "8.99", "https://metrouk2.files.wordpress.com/2016/11/fast-food-1.gif");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("4", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://www.referenceforbusiness.com/photos/fast-food-v1-679.jpg");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("5", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://i.dailymail.co.uk/i/pix/2017/01/24/17/3C782A3700000578-4152656-image-a-22_1485280039808.jpg");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("6", "Double Beef n Cheese Burger", "Comes with medium beverage and 1 side choice", "8.99", "https://s-media-cache-ak0.pinimg.com/736x/07/02/41/0702414e760d9cbe7b17d3552b4a8b58--indian-fast-food-indian-snacks.jpg");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("Special Dishes", true);
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("7", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://static.sfdict.com/sizedimage/sizedimage?width=300&height=300&url=http%3A%2F%2Fstatic.sfdict.com%2Fassets%2F7102-4024811-269.jpg");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("8", "Signature Crafted Crispy Chicken Meal", "Comes with medium beverage and 1 side choice", "8.99", "https://metrouk2.files.wordpress.com/2016/11/fast-food-1.gif");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("9", "Buttermilk Crispy Chicken Sandwich", "Comes with medium beverage and 1 side choice", "8.39", "http://www.referenceforbusiness.com/photos/fast-food-v1-679.jpg");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("10", "Cookie Tote", "Comes with medium beverage and 1 side choice", "4.99", "http://i.dailymail.co.uk/i/pix/2017/01/24/17/3C782A3700000578-4152656-image-a-22_1485280039808.jpg");
+//        fragOneItems.add(item);
+//
+//        item = new FragmentOneDataModel("11", "Double Beef n Cheese Burger", "Comes with medium beverage and 1 side choice", "8.99", "https://s-media-cache-ak0.pinimg.com/736x/07/02/41/0702414e760d9cbe7b17d3552b4a8b58--indian-fast-food-indian-snacks.jpg");
+//        fragOneItems.add(item);
+//
+//        fragOneAdapter.notifyDataSetChanged();
+//    }
 
     private void initUI() {
         tvToTimeMain = (TextView) findViewById(R.id.tvToTime);

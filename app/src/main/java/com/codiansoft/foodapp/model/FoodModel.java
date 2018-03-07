@@ -12,6 +12,7 @@ public class FoodModel {
     String category;
     boolean singleChoiceSelection;
     String foodItemID;
+    private boolean singleChoiceVariation;
 
     public FoodModel() {
     }
@@ -24,6 +25,7 @@ public class FoodModel {
         this.category = category;
         this.singleChoiceSelection = false;
     }
+
     public FoodModel(String sectionTitle, String sectionCategory, boolean isRequired) {
         this.sectionTitle = sectionTitle;
         this.isRequired = isRequired;
@@ -69,5 +71,13 @@ public class FoodModel {
 
     public boolean getSingleChoiceSelection() {
         return singleChoiceSelection;
+    }
+
+    public boolean getSingleChoiceVariation() {
+        return singleChoiceVariation;
+    }
+
+    public void setSingleChoiceVariation(boolean singleChoiceVariation) {
+        this.singleChoiceVariation = singleChoiceVariation;
     }
 }

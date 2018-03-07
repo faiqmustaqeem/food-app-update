@@ -76,6 +76,8 @@ public class RestaurantsRVAdapter extends RecyclerView.Adapter<RecyclerView.View
                             restaurantIntent.putExtra("restaurantDuration", restaurant.get(i).getDuration());
                             restaurantIntent.putExtra("restaurantImage", restaurant.get(i).getPic());
                             restaurantIntent.putExtra("restaurantDescription", restaurant.get(i).getType());
+                            GlobalClass.selectedRestaurantID=restaurant.get(i).getId();
+                            GlobalClass.selectedRestaurantBranchID=restaurant.get(i).getBranchId();
                             sContext.startActivity(restaurantIntent);
                         } else {
                             Intent restaurantIntent = new Intent(sContext, RestaurantActivity.class);
@@ -84,6 +86,8 @@ public class RestaurantsRVAdapter extends RecyclerView.Adapter<RecyclerView.View
                             restaurantIntent.putExtra("restaurantDuration", restaurant.get(i).getDuration());
                             restaurantIntent.putExtra("restaurantImage", restaurant.get(i).getPic());
                             restaurantIntent.putExtra("restaurantDescription", restaurant.get(i).getType());
+                            GlobalClass.selectedRestaurantID=restaurant.get(i).getId();
+                            GlobalClass.selectedRestaurantBranchID=restaurant.get(i).getBranchId();
                             sContext.startActivity(restaurantIntent);
                         }
                     } catch (NullPointerException e) {
@@ -93,6 +97,8 @@ public class RestaurantsRVAdapter extends RecyclerView.Adapter<RecyclerView.View
                         restaurantIntent.putExtra("restaurantDuration", restaurant.get(i).getDuration());
                         restaurantIntent.putExtra("restaurantImage", restaurant.get(i).getPic());
                         restaurantIntent.putExtra("restaurantDescription", restaurant.get(i).getType());
+                        GlobalClass.selectedRestaurantID=restaurant.get(i).getId();
+                        GlobalClass.selectedRestaurantBranchID=restaurant.get(i).getBranchId();
                         sContext.startActivity(restaurantIntent);
                     }
                 }
