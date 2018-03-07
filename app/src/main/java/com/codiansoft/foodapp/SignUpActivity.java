@@ -212,6 +212,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(SignUpActivity.this , "Please select city " , Toast.LENGTH_SHORT).show();
             return false;
         }
+        if(imageBase64.equals(""))
+        {
+            Toast.makeText(SignUpActivity.this , "Please select Profile Image " , Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
 
 
