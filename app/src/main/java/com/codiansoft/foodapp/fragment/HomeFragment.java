@@ -202,6 +202,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 String apiSecretKey = settings.getString("apiSecretKey", "defaultValue");
 
                 params.put("api_secret", apiSecretKey);
+                Log.e("params" , params.toString());
                 return params;
             }
         };
@@ -280,16 +281,16 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                         fetchRestaurantsFromServer();
                                         fetchAllSlidersRestaurants();
 
-                                        restaurantsModel = new RestaurantsModel("1", "McDonald's", "https://cdn-jpg1.thedailymeal.com/sites/default/files/styles/tdm_slideshow_large/public/images/Mcdonalds_logo96.jpg?itok=Mw_7SQGy", "20-30 MIN", "Fast Food","1");
-                                        restaurantslist.add(restaurantsModel);
-                                        restaurantsModel = new RestaurantsModel("2", "KFC PAK", "https://www.onlyitaewon.com/wp-content/uploads/2016/08/KFC-Itaewon-2.jpg", "10-15 MIN", "Fast Food","1");
-                                        restaurantslist.add(restaurantsModel);
-                                        restaurantsModel = new RestaurantsModel("3", "Burger King", "https://www.welivesecurity.com/wp-content/uploads/2016/05/descuento-burger-king-623x432.jpg", "40-50 MIN", "Fast Food","1");
-                                        restaurantslist.add(restaurantsModel);
-                                        restaurantsModel = new RestaurantsModel("4", "Pizza Hut", "http://members.wisdells.com/member-media/rest/PizzaHut.jpg", "20-30 MIN", "Fast Food","1");
-                                        restaurantslist.add(restaurantsModel);
-                                        restaurantsModel = new RestaurantsModel("5", "Sub Way", "https://onefatfrog23.files.wordpress.com/2013/08/subway01_full.jpg", "30-40 MIN", "Fast Food","1");
-                                        restaurantslist.add(restaurantsModel);
+//                                        restaurantsModel = new RestaurantsModel("1", "McDonald's", "https://cdn-jpg1.thedailymeal.com/sites/default/files/styles/tdm_slideshow_large/public/images/Mcdonalds_logo96.jpg?itok=Mw_7SQGy", "20-30 MIN", "Fast Food","1");
+//                                        restaurantslist.add(restaurantsModel);
+//                                        restaurantsModel = new RestaurantsModel("2", "KFC PAK", "https://www.onlyitaewon.com/wp-content/uploads/2016/08/KFC-Itaewon-2.jpg", "10-15 MIN", "Fast Food","1");
+//                                        restaurantslist.add(restaurantsModel);
+//                                        restaurantsModel = new RestaurantsModel("3", "Burger King", "https://www.welivesecurity.com/wp-content/uploads/2016/05/descuento-burger-king-623x432.jpg", "40-50 MIN", "Fast Food","1");
+//                                        restaurantslist.add(restaurantsModel);
+//                                        restaurantsModel = new RestaurantsModel("4", "Pizza Hut", "http://members.wisdells.com/member-media/rest/PizzaHut.jpg", "20-30 MIN", "Fast Food","1");
+//                                        restaurantslist.add(restaurantsModel);
+//                                        restaurantsModel = new RestaurantsModel("5", "Sub Way", "https://onefatfrog23.files.wordpress.com/2013/08/subway01_full.jpg", "30-40 MIN", "Fast Food","1");
+//                                        restaurantslist.add(restaurantsModel);
 
 
                                     }
@@ -437,7 +438,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     for (int i = 0; i < restaurantsArray.length(); i++) {
                                         JSONObject Data = restaurantsArray.getJSONObject(i);
                                         float distanceInMeters = calculateDistance(new LatLng(myLat, myLng), new LatLng(Double.parseDouble(Data.getString("lat")), Double.parseDouble(Data.getString("lng"))));
-                                        restaurantsModel = new RestaurantsModel(Data.getString("id"), Data.getString("name"), Data.getString("logo"), distanceInMeters + "M away", Data.getString("desc"),Data.getString("branch_id"));
+                                        restaurantsModel = new RestaurantsModel(Data.getString("restaurant_id"), Data.getString("name"), Data.getString("logo"), distanceInMeters + "M away", Data.getString("desc"),Data.getString("branch_id"));
                                         restaurantslist.add(restaurantsModel);
                                     }
                                 }

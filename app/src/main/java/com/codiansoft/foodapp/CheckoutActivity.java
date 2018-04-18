@@ -91,7 +91,7 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-                /*if (validInputFields()) {
+                if (validInputFields()) {
                     Card card = new Card()
                             .setNumber(etCardNumber.getText().toString())
                             .setExpMonth(etMonth.getText().toString())
@@ -113,7 +113,7 @@ public class CheckoutActivity extends AppCompatActivity {
                             Toast.makeText(CheckoutActivity.this, "" + throwable.toString(), Toast.LENGTH_SHORT).show();
                         }
                     });
-                }*/
+                }
                 Intent i = new Intent(CheckoutActivity.this, ThankYouActivity.class);
                 startActivity(i);
             }

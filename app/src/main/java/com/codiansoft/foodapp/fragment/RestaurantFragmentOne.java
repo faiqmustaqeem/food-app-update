@@ -102,6 +102,11 @@ public class RestaurantFragmentOne extends Fragment implements ObservableScrollV
                         GlobalClass.selectedRestaurantItemId=allMenu.get(viewPager.getCurrentItem()).get(position).getID();
                         GlobalClass.variation=allMenu.get(viewPager.getCurrentItem()).get(position).getVariation();
 
+                        Log.e("selectedRestaurantID",GlobalClass.selectedRestaurantID);
+                        Log.e("selectedRestaurantID",GlobalClass.selectedRestaurantBranchID);
+                        Log.e("selectedRestaurantID",GlobalClass.selectedRestaurantItemId);
+                        Log.e("selectedRestaurantID",GlobalClass.variation);
+
                     }
 
                     startActivity(i);

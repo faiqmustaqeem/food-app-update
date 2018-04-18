@@ -77,7 +77,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     Spinner spinnerCountry , spinnerState , spinnerCity;
 
     Bitmap bitmapProfilePic;
-    String imageBase64;
+    String imageBase64="";
 
     final int REQUEST_CODE=1;
 
@@ -328,6 +328,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
 
     }
+
+
     private void fetchCountries() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Loading...");

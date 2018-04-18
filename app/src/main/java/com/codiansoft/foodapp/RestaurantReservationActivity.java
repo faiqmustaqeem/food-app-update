@@ -79,28 +79,28 @@ public class RestaurantReservationActivity extends AppCompatActivity implements 
 //        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         initUI();
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                restaurantID = null;
-                restaurantTitle = null;
-                restaurantDuration = null;
-                restaurantImage = null;
-                restaurantDescription = null;
-            } else {
-                restaurantID = extras.getString("restaurantID");
-                restaurantTitle = extras.getString("restaurantTitle");
-                restaurantDuration = extras.getString("restaurantDuration");
-                restaurantImage = extras.getString("restaurantImage");
-                restaurantDescription = extras.getString("restaurantDescription");
-            }
-        } else {
-            restaurantID = (String) savedInstanceState.getSerializable("restaurantID");
-            restaurantTitle = (String) savedInstanceState.getSerializable("restaurantTitle");
-            restaurantDuration = (String) savedInstanceState.getSerializable("restaurantDuration");
-            restaurantImage = (String) savedInstanceState.getSerializable("restaurantImage");
-            restaurantDescription = (String) savedInstanceState.getSerializable("restaurantDescription");
-        }
+//        if (savedInstanceState == null) {
+//            Bundle extras = getIntent().getExtras();
+//            if (extras == null) {
+//                restaurantID = null;
+//                restaurantTitle = null;
+//                restaurantDuration = null;
+//                restaurantImage = null;
+//                restaurantDescription = null;
+//            } else {
+//                restaurantID = extras.getString("restaurantID");
+//                restaurantTitle = extras.getString("restaurantTitle");
+//                restaurantDuration = extras.getString("restaurantDuration");
+//                restaurantImage = extras.getString("restaurantImage");
+//                restaurantDescription = extras.getString("restaurantDescription");
+//            }
+//        } else {
+//            restaurantID = (String) savedInstanceState.getSerializable("restaurantID");
+//            restaurantTitle = (String) savedInstanceState.getSerializable("restaurantTitle");
+//            restaurantDuration = (String) savedInstanceState.getSerializable("restaurantDuration");
+//            restaurantImage = (String) savedInstanceState.getSerializable("restaurantImage");
+//            restaurantDescription = (String) savedInstanceState.getSerializable("restaurantDescription");
+//        }
 
         getSupportActionBar().hide();
         fetchTables();
@@ -176,7 +176,7 @@ public class RestaurantReservationActivity extends AppCompatActivity implements 
                             JSONObject result = Jobject.getJSONObject("result");
                             if (result.getString("status").equals("success"))
                             {
-                                JSONArray tablesArray=result.getJSONArray("response");
+                                JSONArray tablesArray=result.getJSONArray("data");
                                 String id="" , number="";
 
                                 for(int i=0 ; i < tablesArray.length() ; i++)
@@ -186,7 +186,6 @@ public class RestaurantReservationActivity extends AppCompatActivity implements 
                                     number=oneTable.getString("table_no");
 
                                     reservationTablesList.add(new ReservationTableModel(id , number));
-
 
                                 }
                                 mAdapter = new ReservationTableAdapter(RestaurantReservationActivity.this, reservationTablesList);

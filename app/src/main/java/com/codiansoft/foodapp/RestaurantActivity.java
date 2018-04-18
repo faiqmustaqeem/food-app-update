@@ -372,7 +372,6 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                 for (int a = 0; a < tabsQty; a++) {
 
                                     tabPageTitles.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(a).getString("app_category"));
-
                                 }
 
 
@@ -386,7 +385,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
 
 
                                         tabSubCategory.clear();
-                                        tabSubCategory.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getJSONArray("sub_categories").getString(0));
+                                        tabSubCategory.add(result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getString("sub_categories"));
 
 
 //                                        for (int j = 0; j < result.getJSONObject("restaurant_details").getJSONArray("category_names").getJSONObject(i).getJSONArray("sub_categories").length(); j++) {
@@ -414,6 +413,7 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                                         allMenu.add(fragOneItems);
                                     }
                                 }
+
                                 viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), tabsQty, tabPageTitles);
                                 viewPager.setAdapter(viewPagerAdapter);
                                 viewPager.setOffscreenPageLimit(2);
@@ -460,11 +460,13 @@ public class RestaurantActivity extends AppCompatActivity implements ObservableS
                 params.put("api_secret", apiSecretKey);
 
 
-                params.put("restaurant_id", "1");
+                params.put("restaurant_id", GlobalClass.selectedRestaurantID);
 //                params.put("restaurant_id", restaurantID);
 
 
-                params.put("branch_id", "1");
+                params.put("branch_id", GlobalClass.selectedRestaurantBranchID);
+
+                Log.e("params" , params.toString());
                 return params;
             }
         };

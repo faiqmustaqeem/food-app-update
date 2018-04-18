@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,24 +82,11 @@ public class ServiceRestaurantsFragment extends Fragment implements SwipeRefresh
 
         rvRestaurants.setLayoutManager(layoutManager);
 
-        // Auto start of viewpager
-        final Handler handler = new Handler();
-        final Runnable Update = new Runnable() {
-            public void run() {
-                /*if (currentPage == XMEN.length) {
-                    currentPage = 0;
-                }
-                dealsPager.setCurrentItem(currentPage++, true);*/
-            }
-        };
 
-        /*Timer swipeTimer = new Timer();
-        swipeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(Update);
-            }
-        }, 2500, 2500);*/
+        Log.e("start_size" , restaurantslist.size()+"");
+        adapter = new RestaurantsRVAdapter(getActivity(), restaurantslist);
+        rvRestaurants.setAdapter(adapter);
+
 
         /**
          * Showing Swipe Refresh animation on activity create
@@ -109,9 +97,7 @@ public class ServiceRestaurantsFragment extends Fragment implements SwipeRefresh
                                     public void run() {
                                         swipeRefreshLayout.setRefreshing(true);
 
-                                        restaurantslist = new ArrayList<>();
-                                        restaurantsModel = new RestaurantsModel("", "", "", "", "","");
-                                        restaurantslist.add(restaurantsModel);
+
 
                                         fetchRestaurantsFromServer();
 
@@ -130,9 +116,10 @@ public class ServiceRestaurantsFragment extends Fragment implements SwipeRefresh
                     @Override
                     public void onResponse(String response) {
                         // response
+                        Log.e("response" , response);
                         try {
 
-                            restaurantslist = new ArrayList<>();
+
                             JSONObject Jobject = new JSONObject(response);
                             JSONObject result = Jobject.getJSONObject("result");
                             if (result.getString("status").equals("success")) {
@@ -148,21 +135,28 @@ public class ServiceRestaurantsFragment extends Fragment implements SwipeRefresh
                                 } else if (serviceRestaurantType.equals("1")) {
                                     restaurants = result.getJSONArray("delivery_restaurants");
                                 }
+                                Log.e("size" , restaurantslist.size()+"");
                                 if (restaurants.length() > 0) {
+                                    restaurantsModel = new RestaurantsModel("", "", "", "", "","");
+                                    restaurantslist.add(restaurantsModel);
                                     for (int i = 0; i < restaurants.length(); i++) {
                                         JSONObject Data = restaurants.getJSONObject(i);
+                                        Log.e("restaurant_id", Data.getString("restaurant_id"));
                                         restaurantsModel = new RestaurantsModel(Data.getString("restaurant_id"), Data.getString("name"), Data.getString("logo"), Data.getString("timing"), Data.getString("desc"),Data.getString("branch_id"));
                                         restaurantslist.add(restaurantsModel);
+                                        Log.e("size" , restaurantslist.size()+"");
                                     }
-                                    adapter = new RestaurantsRVAdapter(getActivity(), restaurantslist);
-                                    rvRestaurants.setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+//                                    adapter = new RestaurantsRVAdapter(getActivity(), restaurantslist);
+//                                    rvRestaurants.setAdapter(adapter);
                                 }
 
-                                adapter = new RestaurantsRVAdapter(getContext(), restaurantslist);
-                                rvRestaurants.setAdapter(adapter);
+
 
                             }
                         } catch (Exception ee) {
+
+                            Log.e("error" , ee.toString());
                         }
                     }
                 },
@@ -198,6 +192,7 @@ public class ServiceRestaurantsFragment extends Fragment implements SwipeRefresh
                 String apiSecretKey = settings.getString("apiSecretKey", "defaultValue");
                 params.put("api_secret", apiSecretKey);
                 params.put("type", serviceRestaurantType);
+                Log.e("params" , params.toString());
 
 //                "26b4b8f30842b5915138fc5ce53da6443e38fc9d2e"
 

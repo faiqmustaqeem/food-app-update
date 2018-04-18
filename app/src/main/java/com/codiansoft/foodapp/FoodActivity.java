@@ -232,6 +232,9 @@ public class FoodActivity extends AppCompatActivity implements View.OnClickListe
                 params.put("variation",GlobalClass.variation);
 
 
+                Log.e("params" , params.toString());
+
+
                 return params;
             }
         };

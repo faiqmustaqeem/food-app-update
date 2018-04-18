@@ -218,14 +218,8 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         galleryIconSlideLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.gallery_icon_slide_left);
         galleryIconSlideRight = AnimationUtils.loadAnimation(getActivity(), R.anim.gallery_icon_slide_right);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
 
-        rvFriendsActivities.setLayoutManager(layoutManager);
+
 
         /**
          * Showing Swipe Refresh animation on activity create

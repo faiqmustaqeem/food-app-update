@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  */
 
 public class GlobalClass {
-    public static final String BASE_URL="http://admiria.pk/Food/api/";
+    public static final String BASE_URL="http://ad-geniuses.com/food_again/Food/api/";
     public static final String SIGNUP_URL = BASE_URL+"register";
     public static final String LOGIN_URL = BASE_URL+"login";
     public static final String MORE_RESTAURANTS_URL = BASE_URL+"restaurantList";
@@ -23,7 +23,7 @@ public class GlobalClass {
     public static final String SEARCH_RESTAURANT=BASE_URL+"search_homeScreen";
     public static final String CATEGORIES=BASE_URL+"search_via_categories";
     public static final String SEARCH_RESTAURANT_VIA_CATEGIES_RESULT=BASE_URL+"search_via_categories_result";
-   public static final String FETCH_COUNTRIES=BASE_URL+"fetchCountries";
+    public static final String FETCH_COUNTRIES=BASE_URL+"fetchCountries";
     public static final String FETCH_STATES=BASE_URL+"fetchStates";
     public static final String FETCH_CITIES=BASE_URL+"fetchCities";
     public static final String ITEM_CHOICES=BASE_URL+"item_choices";
