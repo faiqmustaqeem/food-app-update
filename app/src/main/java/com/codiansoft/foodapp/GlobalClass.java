@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  */
 
 public class GlobalClass {
-    public static final String BASE_URL="http://ad-geniuses.com/food_again/Food/api/";
+    public static final String BASE_URL="http://ad-geniuses.com/food_again2/Food/api/";
     public static final String SIGNUP_URL = BASE_URL+"register";
     public static final String LOGIN_URL = BASE_URL+"login";
     public static final String MORE_RESTAURANTS_URL = BASE_URL+"restaurantList";

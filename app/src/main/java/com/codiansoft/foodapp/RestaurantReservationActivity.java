@@ -176,7 +176,7 @@ public class RestaurantReservationActivity extends AppCompatActivity implements 
                             JSONObject result = Jobject.getJSONObject("result");
                             if (result.getString("status").equals("success"))
                             {
-                                JSONArray tablesArray=result.getJSONArray("data");
+                                JSONArray tablesArray=result.getJSONArray("userInfo");
                                 String id="" , number="";
 
                                 for(int i=0 ; i < tablesArray.length() ; i++)
